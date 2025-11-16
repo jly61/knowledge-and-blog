@@ -1,5 +1,6 @@
 import { db } from "@/lib/db"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { formatDate } from "@/lib/utils"
 
@@ -19,6 +20,7 @@ export default async function BlogPage() {
     orderBy: { publishedAt: "desc" },
     take: 10,
   })
+
 
   return (
     <div className="container mx-auto px-4 py-8">

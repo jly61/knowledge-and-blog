@@ -20,6 +20,12 @@ export default async function NoteDetailPage({
     include: {
       category: true,
       tags: true,
+      post: {
+        select: {
+          id: true,
+          slug: true,
+        },
+      },
       links: {
         include: {
           toNote: {
@@ -68,6 +74,15 @@ export default async function NoteDetailPage({
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">{note.title}</h1>
         <div className="flex gap-2">
+          {note.post ? (
+            <Link href={`/blog/${note.post.slug}`}>
+              <Button variant="outline">查看文章</Button>
+            </Link>
+          ) : (
+            <Link href={`/notes/${note.id}/publish`}>
+              <Button>发布为文章</Button>
+            </Link>
+          )}
           <Link href={`/notes/${note.id}/edit`}>
             <Button variant="outline">编辑</Button>
           </Link>

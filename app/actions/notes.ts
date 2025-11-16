@@ -124,6 +124,30 @@ export async function deleteNote(noteId: string) {
 }
 
 /**
+ * 根据 ID 获取笔记详情
+ */
+export async function getNoteById(noteId: string) {
+  const user = await getCurrentUser()
+  if (!user) {
+    throw new Error("未授权")
+  }
+
+  const note = await db.note.findUnique({
+    where: { id: noteId },
+    include: {
+      category: true,
+      tags: true,
+    },
+  })
+
+  if (!note || note.userId !== user.id) {
+    return null
+  }
+
+  return note
+}
+
+/**
  * 获取笔记预览（用于链接预览）
  */
 export async function getNotePreview(noteId: string) {

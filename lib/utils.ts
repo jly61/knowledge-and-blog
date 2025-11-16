@@ -9,12 +9,24 @@ export function cn(...inputs: ClassValue[]) {
  * 生成 URL 友好的 slug
  */
 export function generateSlug(text: string): string {
-  return text
+  if (!text || text.trim() === '') {
+    // 如果文本为空，生成一个基于时间戳的 slug
+    return `post-${Date.now()}`
+  }
+  
+  let slug = text
     .toLowerCase()
     .trim()
     .replace(/[^\w\s-]/g, '') // 移除特殊字符
     .replace(/[\s_-]+/g, '-') // 替换空格为连字符
     .replace(/^-+|-+$/g, '') // 移除首尾连字符
+  
+  // 如果处理后的 slug 为空，使用时间戳
+  if (!slug || slug === '') {
+    slug = `post-${Date.now()}`
+  }
+  
+  return slug
 }
 
 /**
