@@ -1,0 +1,28 @@
+import { NoteEditor } from "@/components/notes/note-editor"
+import { db } from "@/lib/db"
+import { getCurrentUser } from "@/lib/auth-server"
+import { redirect } from "next/navigation"
+
+export default async function NewNotePage() {
+  const user = await getCurrentUser()
+  if (!user) {
+    redirect("/login")
+  }
+
+  const [categories, tags] = await Promise.all([
+    db.category.findMany({
+      orderBy: { name: "asc" },
+    }),
+    db.tag.findMany({
+      orderBy: { name: "asc" },
+    }),
+  ])
+
+  return (
+    <div className="container mx-auto px-4 py-8 max-w-4xl">
+      <h1 className="text-3xl font-bold mb-6">新建笔记</h1>
+      <NoteEditor categories={categories} tags={tags} />
+    </div>
+  )
+}
+
