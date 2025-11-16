@@ -31,6 +31,12 @@ export default async function DashboardLayout({
                 <Link href="/search">
                   <Button variant="ghost">搜索</Button>
                 </Link>
+                <Link href="/categories">
+                  <Button variant="ghost">分类</Button>
+                </Link>
+                <Link href="/tags">
+                  <Button variant="ghost">标签</Button>
+                </Link>
                 <Link href="/graph">
                   <Button variant="ghost">知识图谱</Button>
                 </Link>

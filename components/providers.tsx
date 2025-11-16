@@ -2,6 +2,7 @@
 
 import { SessionProvider } from "next-auth/react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { Toaster } from "sonner"
 import { useState } from "react"
 
 export function Providers({ children }: { children: React.ReactNode }) {
@@ -22,7 +23,10 @@ export function Providers({ children }: { children: React.ReactNode }) {
       refetchInterval={5 * 60} // 5 分钟轮询一次（而不是默认的频繁轮询）
       refetchOnWindowFocus={false} // 窗口聚焦时不自动刷新
     >
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+      <QueryClientProvider client={queryClient}>
+        {children}
+        <Toaster position="top-right" />
+      </QueryClientProvider>
     </SessionProvider>
   )
 }
