@@ -340,7 +340,7 @@ export function CategoriesClient({ initialCategories }: CategoriesClientProps) {
           <AlertDialogHeader>
             <AlertDialogTitle>确认删除</AlertDialogTitle>
             <AlertDialogDescription>
-              确定要删除分类 "{deletingCategory?.name}" 吗？
+              确定要删除分类 &quot;{deletingCategory?.name}&quot; 吗？
               {deletingCategory && (deletingCategory._count.notes > 0 || deletingCategory._count.posts > 0) && (
                 <span className="block mt-2 text-destructive">
                   该分类下有 {deletingCategory._count.notes} 篇笔记和 {deletingCategory._count.posts} 篇文章

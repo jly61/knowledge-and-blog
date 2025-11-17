@@ -35,6 +35,11 @@ pnpm-debug.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+*.js.map
+
+# compiled files
+lib/**/*.js
+lib/**/*.js.map
 
 # prisma
 /prisma/migrations

@@ -28,7 +28,7 @@ export function SearchClient() {
   const [tags, setTags] = useState<Array<{ id: string; name: string }>>([])
   const [isLoading, setIsLoading] = useState(false)
   const [hasSearched, setHasSearched] = useState(false)
-  const [isPending, startTransition] = useTransition()
+  const [isPending] = useTransition()
 
   // 加载分类和标签
   useEffect(() => {

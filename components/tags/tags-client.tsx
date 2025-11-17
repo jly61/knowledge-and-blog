@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useTransition } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -310,7 +310,7 @@ export function TagsClient({ initialTags }: TagsClientProps) {
           <AlertDialogHeader>
             <AlertDialogTitle>确认删除</AlertDialogTitle>
             <AlertDialogDescription>
-              确定要删除标签 "#{deletingTag?.name}" 吗？
+              确定要删除标签 &quot;#{deletingTag?.name}&quot; 吗？
               {deletingTag && (deletingTag._count.notes > 0 || deletingTag._count.posts > 0) && (
                 <span className="block mt-2 text-destructive">
                   该标签下有 {deletingTag._count.notes} 篇笔记和 {deletingTag._count.posts} 篇文章
