@@ -6,7 +6,6 @@ import { createNote, updateNote } from "@/app/actions/notes"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
-import { NoteWithRelations } from "@/types/note"
 
 // 使用类型推断，避免直接导入可能不存在的类型
 type Category = { id: string; name: string }
@@ -16,8 +15,19 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
 
+// 编辑笔记时需要的类型（不需要 links 和 backlinks）
+type NoteForEditor = {
+  id: string
+  title: string
+  content: string
+  categoryId: string | null
+  tags: Array<{ id: string; name: string }>
+  isPinned?: boolean
+  isFavorite?: boolean
+}
+
 interface NoteEditorProps {
-  note?: NoteWithRelations
+  note?: NoteForEditor
   categories: Category[]
   tags: Tag[]
 }
