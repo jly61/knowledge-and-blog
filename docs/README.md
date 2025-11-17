@@ -20,6 +20,11 @@
 - [实现指南](./IMPLEMENTATION_GUIDE.md) - 核心功能的实现思路和代码示例
 - [pnpm 迁移指南](./PNPM_MIGRATION.md) - 从 npm 迁移到 pnpm 的说明
 
+### 部署相关
+- [云服务器部署指南](./DEPLOYMENT_SERVER.md) - Docker Compose 或直接部署到服务器（推荐有服务器的用户）
+- [快速部署指南](./DEPLOYMENT_QUICK_START.md) - 5 分钟快速部署到 Vercel（无服务器）
+- [完整部署指南](./DEPLOYMENT_GUIDE.md) - 详细的部署方案和配置说明
+
 ## 📖 快速查找
 
 ### 我想学习...
