@@ -2,11 +2,11 @@ import Link from "next/link"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { formatRelativeTime } from "@/lib/utils"
-import { NoteWithRelations } from "@/types/note"
+import { NoteForList } from "@/types/note"
 import { Pin, Heart, Link2 } from "lucide-react"
 
 interface NoteCardProps {
-  note: NoteWithRelations
+  note: NoteForList
 }
 
 export function NoteCard({ note }: NoteCardProps) {

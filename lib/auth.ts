@@ -21,7 +21,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         }
 
         const user = await db.user.findUnique({
-          where: { email: credentials.email }
+          where: { email: String(credentials.email) }
         })
 
         if (!user) {
@@ -42,7 +42,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             httpOptions: {
               timeout: 30000, // 30 秒超时
             },
-          }),
+          } as any),
         ]
       : []),
     ...(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET
@@ -54,7 +54,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             httpOptions: {
               timeout: 30000, // 30 秒超时
             },
-          }),
+          } as any),
         ]
       : []),
   ],

@@ -140,12 +140,12 @@ export function GraphClient({ categories, tags }: GraphClientProps) {
       },
     }
 
-    const network = new Network(networkRef.current, data, options)
+    const network = new Network(networkRef.current, data, options as any)
 
     // 节点点击事件
     network.on("click", (params: any) => {
-      if (params.nodes.length > 0) {
-        const nodeId = params.nodes[0] as string
+      if (params.nodes && params.nodes.length > 0) {
+        const nodeId = String(params.nodes[0])
         router.push(`/notes/${nodeId}`)
       }
     })

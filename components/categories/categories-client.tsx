@@ -119,7 +119,7 @@ export function CategoriesClient({ initialCategories }: CategoriesClientProps) {
           color: formData.color || undefined,
         })
         setCategories((prev) =>
-          prev.map((cat) => (cat.id === editingCategory.id ? updated as Category : cat))
+          prev.map((cat) => (cat.id === editingCategory.id ? { ...updated, _count: cat._count } as Category : cat))
         )
         setIsEditOpen(false)
         setEditingCategory(null)

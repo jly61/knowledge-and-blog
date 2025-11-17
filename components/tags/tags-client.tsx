@@ -113,7 +113,7 @@ export function TagsClient({ initialTags }: TagsClientProps) {
           color: formData.color || undefined,
         })
         setTags((prev) =>
-          prev.map((tag) => (tag.id === editingTag.id ? updated as Tag : tag))
+          prev.map((tag) => (tag.id === editingTag.id ? { ...updated, _count: tag._count } as Tag : tag))
         )
         setIsEditOpen(false)
         setEditingTag(null)

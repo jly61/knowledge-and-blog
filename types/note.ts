@@ -11,6 +11,16 @@ export type NoteWithRelations = Note & {
   }
 }
 
+// 用于列表页显示的类型（不需要完整的 links 和 backlinks 数据，只需要计数）
+export type NoteForList = Note & {
+  category: Category | null
+  tags: Tag[]
+  _count?: {
+    links: number
+    backlinks: number
+  }
+}
+
 export type NoteLinkWithNotes = NoteLink & {
   fromNote: Pick<Note, 'id' | 'title'>
   toNote: Pick<Note, 'id' | 'title'>
