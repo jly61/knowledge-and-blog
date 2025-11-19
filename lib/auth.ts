@@ -8,6 +8,7 @@ import { PrismaClient } from "@prisma/client"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(db as PrismaClient),
+  trustHost: true, // 允许 Vercel 等平台自动设置信任的主机
   providers: [
     CredentialsProvider({
       name: "Credentials",
