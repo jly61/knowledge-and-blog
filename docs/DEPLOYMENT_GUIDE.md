@@ -49,7 +49,7 @@ git push
 
 ```env
 # NextAuth.js（必需）
-NEXTAUTH_URL=https://your-domain.vercel.app
+NEXTAUTH_URL=https://knowledge-and-blog.vercel.app
 NEXTAUTH_SECRET=生成一个随机字符串（见下方）
 
 # OAuth（可选，如果使用 GitHub/Google 登录）
