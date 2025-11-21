@@ -3,6 +3,17 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { formatDate } from "@/lib/utils"
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "博客 | 个人知识库 + 技术博客",
+  description: "分享技术知识、经验和思考的技术博客",
+  openGraph: {
+    title: "博客 | 个人知识库 + 技术博客",
+    description: "分享技术知识、经验和思考的技术博客",
+    type: "website",
+  },
+}
 
 export default async function BlogPage() {
   const posts = await db.post.findMany({

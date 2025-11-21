@@ -1,13 +1,61 @@
 import { getPostBySlug } from "@/app/actions/posts"
 import { getCurrentUser } from "@/lib/auth-server"
 import { notFound } from "next/navigation"
-import { formatDate } from "@/lib/utils"
+import { formatDate, extractExcerpt } from "@/lib/utils"
 import { NoteContent } from "@/components/notes/note-content"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import type { Metadata } from "next"
 
 export const dynamic = "force-dynamic"
+
+// 生成文章详情页的元数据
+export async function generateMetadata({
+  params,
+}: {
+  params: { slug: string }
+}): Promise<Metadata> {
+  const post = await getPostBySlug(params.slug)
+
+  if (!post) {
+    return {
+      title: "文章未找到",
+    }
+  }
+
+  const siteUrl = process.env.NEXTAUTH_URL || "https://knowledge-and-blog.vercel.app"
+  const title = post.metaTitle || post.title
+  const description = post.metaDescription || post.excerpt || extractExcerpt(post.content, 160)
+  const image = post.coverImage || `${siteUrl}/og-image.png`
+
+  return {
+    title: `${title} | 个人知识库 + 技术博客`,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: "article",
+      publishedTime: post.publishedAt?.toISOString(),
+      modifiedTime: post.updatedAt?.toISOString(),
+      authors: [post.user.name || "匿名"],
+      images: [
+        {
+          url: image,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [image],
+    },
+  }
+}
 
 export default async function PostDetailPage({
   params,
@@ -27,8 +75,44 @@ export default async function PostDetailPage({
   // 创建笔记标题映射（用于双向链接）
   const noteTitleMap = new Map<string, string>()
 
+  // 生成结构化数据（JSON-LD）
+  const siteUrl = process.env.NEXTAUTH_URL || "https://knowledge-and-blog.vercel.app"
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: post.title,
+    description: post.metaDescription || post.excerpt || extractExcerpt(post.content, 160),
+    image: post.coverImage ? [post.coverImage] : [],
+    datePublished: post.publishedAt?.toISOString(),
+    dateModified: post.updatedAt?.toISOString(),
+    author: {
+      "@type": "Person",
+      name: post.user.name || "匿名",
+      image: post.user.image,
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "个人知识库 + 技术博客",
+      logo: {
+        "@type": "ImageObject",
+        url: `${siteUrl}/logo.png`,
+      },
+    },
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `${siteUrl}/blog/${post.slug}`,
+    },
+    articleSection: post.category?.name,
+    keywords: post.tags.map((tag: { name: string }) => tag.name).join(", "),
+  }
+
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
+      {/* 结构化数据（JSON-LD） */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {isAuthor && (
         <div className="mb-4 flex justify-end">
           <Link href={`/posts/${post.slug}/edit`}>
