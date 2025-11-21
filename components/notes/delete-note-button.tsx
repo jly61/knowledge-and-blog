@@ -1,4 +1,4 @@
-一天statu"use client"
+"use client"
 
 import { useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
