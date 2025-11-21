@@ -16,6 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
+import { DeletePostButton } from "@/components/posts/delete-post-button"
 import { toast } from "sonner"
 import { Loader2 } from "lucide-react"
 
@@ -250,19 +251,22 @@ export function PostEditor({ post, categories, tags }: PostEditorProps) {
         </CardContent>
       </Card>
 
-      <div className="flex gap-4">
-        <Button type="submit" disabled={isPending}>
-          {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          保存更改
-        </Button>
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => router.back()}
-          disabled={isPending}
-        >
-          取消
-        </Button>
+      <div className="flex gap-4 justify-between">
+        <div className="flex gap-4">
+          <Button type="submit" disabled={isPending}>
+            {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            保存更改
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => router.back()}
+            disabled={isPending}
+          >
+            取消
+          </Button>
+        </div>
+        <DeletePostButton postId={post.id} postTitle={post.title} />
       </div>
     </form>
   )

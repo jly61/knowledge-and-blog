@@ -3,6 +3,7 @@ import { db } from "@/lib/db"
 import { redirect } from "next/navigation"
 import { NoteView } from "@/components/notes/note-view"
 import { Button } from "@/components/ui/button"
+import { DeleteNoteButton } from "@/components/notes/delete-note-button"
 import Link from "next/link"
 
 export default async function NoteDetailPage({
@@ -86,6 +87,12 @@ export default async function NoteDetailPage({
           <Link href={`/notes/${note.id}/edit`}>
             <Button variant="outline">编辑</Button>
           </Link>
+          <DeleteNoteButton
+            noteId={note.id}
+            noteTitle={note.title}
+            hasPost={!!note.post}
+            size="sm"
+          />
         </div>
       </div>
       <NoteView note={note} noteTitleMap={noteTitleMap} />

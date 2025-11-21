@@ -225,18 +225,44 @@ export async function deletePost(postId: string) {
 
   const post = await db.post.findUnique({
     where: { id: postId, userId: user.id },
+    select: {
+      id: true,
+      slug: true,
+      noteId: true,
+    },
   })
 
   if (!post) {
     throw new Error("文章不存在")
   }
 
+  const postSlug = post.slug
+  const noteId = post.noteId
+
+  // 如果文章关联了笔记，先清除笔记的 postId（必须在删除 Post 之前，避免外键约束错误）
+  if (noteId) {
+    await db.note.update({
+      where: { id: noteId },
+      data: { postId: null },
+    })
+  }
+
+  // 删除文章（Prisma 会自动处理关联的 comments、tags 等）
+  // comments 有 onDelete: Cascade，会自动删除
+  // tags 是多对多关系，会自动断开
+  // category 有 onDelete: SetNull，会自动处理
   await db.post.delete({
     where: { id: postId },
   })
 
+  // 清除所有相关缓存
   revalidatePath("/blog")
-  revalidatePath(`/blog/${post.slug}`)
+  if (postSlug) {
+    revalidatePath(`/blog/${postSlug}`)
+  }
+  if (noteId) {
+    revalidatePath("/notes")
+  }
 }
 
 /**

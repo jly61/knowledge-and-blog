@@ -6,6 +6,7 @@ import { createNote, updateNote } from "@/app/actions/notes"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
+import { DeleteNoteButton } from "@/components/notes/delete-note-button"
 
 // 使用类型推断，避免直接导入可能不存在的类型
 type Category = { id: string; name: string }
@@ -174,18 +175,27 @@ export function NoteEditor({ note, categories, tags }: NoteEditorProps) {
         </label>
       </div>
 
-      <div className="flex justify-end gap-2">
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => router.back()}
-          disabled={isPending}
-        >
-          取消
-        </Button>
-        <Button type="submit" disabled={isPending}>
-          {isPending ? "保存中..." : "保存"}
-        </Button>
+      <div className="flex justify-between items-center">
+        {note && (
+          <DeleteNoteButton
+            noteId={note.id}
+            noteTitle={note.title}
+            hasPost={false}
+          />
+        )}
+        <div className="flex gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => router.back()}
+            disabled={isPending}
+          >
+            取消
+          </Button>
+          <Button type="submit" disabled={isPending}>
+            {isPending ? "保存中..." : "保存"}
+          </Button>
+        </div>
       </div>
     </form>
   )

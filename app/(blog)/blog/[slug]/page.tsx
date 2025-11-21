@@ -5,6 +5,7 @@ import { formatDate, extractExcerpt } from "@/lib/utils"
 import { NoteContent } from "@/components/notes/note-content"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { DeletePostButton } from "@/components/posts/delete-post-button"
 import Link from "next/link"
 import type { Metadata } from "next"
 
@@ -114,12 +115,13 @@ export default async function PostDetailPage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       {isAuthor && (
-        <div className="mb-4 flex justify-end">
+        <div className="mb-4 flex justify-end gap-2">
           <Link href={`/posts/${post.slug}/edit`}>
             <Button variant="outline" size="sm">
               编辑文章
             </Button>
           </Link>
+          <DeletePostButton postId={post.id} postTitle={post.title} size="sm" />
         </div>
       )}
       <article className="space-y-6">

@@ -109,12 +109,26 @@ export async function deleteNote(noteId: string) {
   // 检查权限
   const note = await db.note.findUnique({
     where: { id: noteId },
+    select: {
+      id: true,
+      userId: true,
+      postId: true,
+    },
   })
 
   if (!note || note.userId !== user.id) {
     throw new Error("笔记不存在或无权访问")
   }
 
+  // 如果笔记已发布为文章，先删除关联的文章
+  if (note.postId) {
+    await db.post.delete({
+      where: { id: note.postId },
+    })
+    revalidatePath("/blog")
+  }
+
+  // 删除笔记
   await db.note.delete({
     where: { id: noteId },
   })
