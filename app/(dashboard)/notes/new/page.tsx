@@ -32,7 +32,7 @@ export default async function NewNotePage() {
   })
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-4xl">
+    <div className="container mx-auto px-6 py-8 max-w-7xl">
       <h1 className="text-3xl font-bold mb-6">新建笔记</h1>
       <NoteEditor categories={categories} tags={tags} noteTitleMap={noteTitleMap} />
     </div>

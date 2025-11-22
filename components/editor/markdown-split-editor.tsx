@@ -100,7 +100,7 @@ export function MarkdownSplitEditor({
         />
       </div>
 
-      <div className="grid grid-cols-2 gap-0 border rounded-lg overflow-hidden h-[600px]">
+      <div className="grid grid-cols-2 gap-0 border rounded-lg overflow-hidden h-[700px]">
         {/* 左侧：Markdown 编辑器 */}
         <div className="relative border-r overflow-hidden">
           <Textarea
