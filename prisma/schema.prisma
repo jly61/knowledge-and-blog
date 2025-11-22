@@ -74,6 +74,7 @@ model Note {
   isPrivate   Boolean  @default(true)
   isPinned    Boolean  @default(false)
   isFavorite  Boolean  @default(false)
+  isMOC       Boolean  @default(false) // Map of Contents 索引页
 
   userId      String
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)

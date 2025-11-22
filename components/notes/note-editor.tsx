@@ -25,6 +25,7 @@ type NoteForEditor = {
   tags: Array<{ id: string; name: string }>
   isPinned?: boolean
   isFavorite?: boolean
+  isMOC?: boolean
 }
 
 interface NoteEditorProps {
@@ -45,6 +46,7 @@ export function NoteEditor({ note, categories, tags, noteTitleMap = new Map() }:
   )
   const [isPinned, setIsPinned] = useState(note?.isPinned || false)
   const [isFavorite, setIsFavorite] = useState(note?.isFavorite || false)
+  const [isMOC, setIsMOC] = useState(note?.isMOC || false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -63,6 +65,7 @@ export function NoteEditor({ note, categories, tags, noteTitleMap = new Map() }:
             tagIds: selectedTags,
             isPinned,
             isFavorite,
+            isMOC,
           })
         } else {
           await createNote({
@@ -70,6 +73,7 @@ export function NoteEditor({ note, categories, tags, noteTitleMap = new Map() }:
             content,
             categoryId: categoryId === "none" ? undefined : categoryId,
             tagIds: selectedTags,
+            isMOC,
           })
         }
         router.push("/notes")
@@ -168,6 +172,13 @@ export function NoteEditor({ note, categories, tags, noteTitleMap = new Map() }:
             onCheckedChange={(checked) => setIsFavorite(checked as boolean)}
           />
           <span>收藏</span>
+        </label>
+        <label className="flex items-center space-x-2 cursor-pointer">
+          <Checkbox
+            checked={isMOC}
+            onCheckedChange={(checked) => setIsMOC(checked as boolean)}
+          />
+          <span>MOC (索引页)</span>
         </label>
       </div>
 

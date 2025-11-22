@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { formatRelativeTime } from "@/lib/utils"
 import { NoteForList } from "@/types/note"
-import { Pin, Heart, Link2 } from "lucide-react"
+import { Pin, Heart, Link2, FileText } from "lucide-react"
 
 interface NoteCardProps {
   note: NoteForList
@@ -19,6 +19,12 @@ export function NoteCard({ note }: NoteCardProps) {
               <CardTitle className="hover:text-primary transition-colors flex items-center gap-2">
                 {note.isPinned && <Pin className="w-4 h-4 text-yellow-500" />}
                 {note.isFavorite && <Heart className="w-4 h-4 text-red-500 fill-red-500" />}
+                {note.isMOC && (
+                  <span className="px-2 py-0.5 text-xs bg-primary/10 text-primary rounded-full font-medium flex items-center gap-1">
+                    <FileText className="w-3 h-3" />
+                    MOC
+                  </span>
+                )}
                 {note.title}
               </CardTitle>
             </Link>

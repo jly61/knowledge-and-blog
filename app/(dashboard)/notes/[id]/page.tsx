@@ -2,9 +2,11 @@ import { getCurrentUser } from "@/lib/auth-server"
 import { db } from "@/lib/db"
 import { redirect } from "next/navigation"
 import { NoteView } from "@/components/notes/note-view"
+import { MOCLinksPanel } from "@/components/moc/moc-links-panel"
 import { Button } from "@/components/ui/button"
 import { DeleteNoteButton } from "@/components/notes/delete-note-button"
 import Link from "next/link"
+import { FileText } from "lucide-react"
 
 export default async function NoteDetailPage({
   params,
@@ -33,6 +35,21 @@ export default async function NoteDetailPage({
             select: {
               id: true,
               title: true,
+              excerpt: true,
+              category: {
+                select: {
+                  id: true,
+                  name: true,
+                  color: true,
+                },
+              },
+              tags: {
+                select: {
+                  id: true,
+                  name: true,
+                  color: true,
+                },
+              },
             },
           },
         },
@@ -43,6 +60,21 @@ export default async function NoteDetailPage({
             select: {
               id: true,
               title: true,
+              excerpt: true,
+              category: {
+                select: {
+                  id: true,
+                  name: true,
+                  color: true,
+                },
+              },
+              tags: {
+                select: {
+                  id: true,
+                  name: true,
+                  color: true,
+                },
+              },
             },
           },
         },
@@ -73,7 +105,15 @@ export default async function NoteDetailPage({
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">{note.title}</h1>
+        <div className="flex items-center gap-3">
+          <h1 className="text-3xl font-bold">{note.title}</h1>
+          {note.isMOC && (
+            <span className="px-3 py-1 text-sm bg-primary/10 text-primary rounded-full font-medium flex items-center gap-1">
+              <FileText className="w-4 h-4" />
+              MOC
+            </span>
+          )}
+        </div>
         <div className="flex gap-2">
           {note.post ? (
             <Link href={`/blog/${note.post.slug}`}>
@@ -96,6 +136,14 @@ export default async function NoteDetailPage({
         </div>
       </div>
       <NoteView note={note} noteTitleMap={noteTitleMap} />
+      {note.isMOC && note.links.length + note.backlinks.length > 0 && (
+        <div className="mt-6">
+          <MOCLinksPanel
+            links={note.links as any}
+            backlinks={note.backlinks as any}
+          />
+        </div>
+      )}
     </div>
   )
 }

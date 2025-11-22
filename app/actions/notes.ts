@@ -14,6 +14,7 @@ export async function createNote(data: {
   content: string
   categoryId?: string
   tagIds?: string[]
+  isMOC?: boolean
 }) {
   const user = await getCurrentUser()
   if (!user) {
@@ -27,6 +28,7 @@ export async function createNote(data: {
       content: data.content,
       userId: user.id,
       categoryId: data.categoryId,
+      isMOC: data.isMOC || false,
       tags: data.tagIds && data.tagIds.length > 0
         ? {
             connect: data.tagIds.map((id) => ({ id })),
@@ -54,6 +56,7 @@ export async function updateNote(
     tagIds?: string[]
     isPinned?: boolean
     isFavorite?: boolean
+    isMOC?: boolean
   }
 ) {
   const user = await getCurrentUser()
@@ -79,6 +82,7 @@ export async function updateNote(
       categoryId: data.categoryId,
       isPinned: data.isPinned,
       isFavorite: data.isFavorite,
+      isMOC: data.isMOC,
       tags: data.tagIds
         ? {
             set: data.tagIds.map((id) => ({ id })),

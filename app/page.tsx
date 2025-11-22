@@ -15,15 +15,16 @@ export default async function HomePage() {
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <h1 className="text-2xl font-bold">知识库 + 博客</h1>
           <nav className="flex gap-4">
+            <Link href="/blog">
+              <Button variant="ghost">博客</Button>
+            </Link>
+            <Link href="/interview">
+              <Button variant="ghost">面试</Button>
+            </Link>
             {user ? (
-              <>
-                <Link href="/dashboard">
-                  <Button variant="ghost">仪表板</Button>
-                </Link>
-                <Link href="/blog">
-                  <Button variant="ghost">博客</Button>
-                </Link>
-              </>
+              <Link href="/dashboard">
+                <Button variant="ghost">知识库</Button>
+              </Link>
             ) : (
               <>
                 <Link href="/login">
@@ -59,6 +60,11 @@ export default async function HomePage() {
                 <Link href="/blog">
                   <Button size="lg" variant="outline">
                     查看博客
+                  </Button>
+                </Link>
+                <Link href="/interview">
+                  <Button size="lg" variant="outline">
+                    面试题库
                   </Button>
                 </Link>
               </>
