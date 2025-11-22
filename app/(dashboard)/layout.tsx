@@ -25,6 +25,9 @@ export default async function DashboardLayout({
                 知识库
               </Link>
               <nav className="flex gap-4">
+                <Link href="/">
+                  <Button variant="ghost">首页</Button>
+                </Link>
                 <Link href="/notes">
                   <Button variant="ghost">笔记</Button>
                 </Link>

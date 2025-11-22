@@ -15,6 +15,7 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
 import { MarkdownSplitEditor } from "@/components/editor/markdown-split-editor"
+import { Spinner } from "@/components/ui/spinner"
 
 // 编辑笔记时需要的类型（不需要 links 和 backlinks）
 type NoteForEditor = {
@@ -200,6 +201,7 @@ export function NoteEditor({ note, categories, tags, noteTitleMap = new Map() }:
             取消
           </Button>
           <Button type="submit" disabled={isPending}>
+            {isPending && <Spinner className="mr-2" size="sm" />}
             {isPending ? "保存中..." : "保存"}
           </Button>
         </div>

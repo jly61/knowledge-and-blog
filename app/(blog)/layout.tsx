@@ -18,6 +18,9 @@ export default async function BlogLayout({
               博客
             </Link>
             <nav className="flex gap-4">
+              <Link href="/">
+                <Button variant="ghost">首页</Button>
+              </Link>
               {user ? (
                 <Link href="/dashboard">
                   <Button variant="ghost">知识库</Button>

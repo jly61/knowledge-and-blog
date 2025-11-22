@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
 import { toast } from "sonner"
-import { Loader2 } from "lucide-react"
+import { Spinner } from "@/components/ui/spinner"
 
 interface PublishNoteClientProps {
   note: {
@@ -175,7 +175,7 @@ export function PublishNoteClient({ note, categories, tags }: PublishNoteClientP
 
       <div className="flex gap-4">
         <Button type="submit" disabled={isPending}>
-          {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          {isPending && <Spinner className="mr-2" size="sm" />}
           {note.postId ? "更新文章" : "发布文章"}
         </Button>
         <Button

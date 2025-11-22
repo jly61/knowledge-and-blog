@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { getCurrentUser } from "@/lib/auth-server"
+import { InterviewLayoutWithPath } from "@/app/interview/interview-layout-with-path"
 
 export default async function InterviewLayout({
   children,
@@ -46,7 +47,18 @@ export default async function InterviewLayout({
           </div>
         </div>
       </header>
-      <main className="flex-1">{children}</main>
+      <main className="flex-1">
+        <div className="container mx-auto px-6 py-8 max-w-7xl">
+          <div className="grid grid-cols-12 gap-6">
+            {/* 左侧导航 - 在 layout 中渲染，保持稳定 */}
+            <InterviewLayoutWithPath />
+            {/* 右侧内容 - 由页面组件渲染 */}
+            <div className="col-span-12 lg:col-span-9">
+              {children}
+            </div>
+          </div>
+        </div>
+      </main>
     </div>
   )
 }

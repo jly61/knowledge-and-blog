@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useTransition } from "react"
+import { Spinner } from "@/components/ui/spinner"
 import { useRouter } from "next/navigation"
 import { deletePost } from "@/app/actions/posts"
 import { Button } from "@/components/ui/button"
@@ -15,7 +16,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { toast } from "sonner"
-import { Trash2, Loader2 } from "lucide-react"
+import { Trash2 } from "lucide-react"
 
 interface DeletePostButtonProps {
   postId: string
@@ -59,7 +60,7 @@ export function DeletePostButton({
       >
         {isPending ? (
           <>
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            <Spinner className="mr-2" size="sm" />
             删除中...
           </>
         ) : (

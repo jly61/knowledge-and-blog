@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState, useTransition } from "react"
+import { Spinner } from "@/components/ui/spinner"
 import { createComment } from "@/app/actions/comments"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
@@ -142,6 +143,7 @@ export function CommentForm({ postId, parentId, onSuccess }: CommentFormProps) {
 
           <div className="flex justify-end">
             <Button type="submit" disabled={isPending || !content.trim()}>
+              {isPending && <Spinner className="mr-2" size="sm" />}
               {isPending ? "提交中..." : parentId ? "回复" : "发表评论"}
             </Button>
           </div>

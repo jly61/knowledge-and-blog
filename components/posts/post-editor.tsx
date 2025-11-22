@@ -19,7 +19,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { DeletePostButton } from "@/components/posts/delete-post-button"
 import { ImageUploadButton } from "@/components/upload/image-upload-button"
 import { toast } from "sonner"
-import { Loader2 } from "lucide-react"
+import { Spinner } from "@/components/ui/spinner"
 
 interface PostEditorProps {
   post: {
@@ -287,7 +287,7 @@ export function PostEditor({ post, categories, tags }: PostEditorProps) {
       <div className="flex gap-4 justify-between">
         <div className="flex gap-4">
           <Button type="submit" disabled={isPending}>
-            {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            {isPending && <Spinner className="mr-2" size="sm" />}
             保存更改
           </Button>
           <Button
