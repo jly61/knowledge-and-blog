@@ -4,6 +4,15 @@
 
 ## 📚 文档索引
 
+### 学习计划（推荐新手）
+- [完全掌握项目学习计划](./learn/README.md) - 从零开始系统学习项目的完整路径
+  - [技术栈基础](./learn/00-技术栈基础.md) - Next.js、React、Prisma 等核心技术
+  - [项目架构理解](./learn/01-项目架构理解.md) - 项目整体架构分析
+  - [功能模块学习](./learn/02-功能模块学习.md) - 核心功能模块详解
+  - [代码深度阅读](./learn/03-代码深度阅读.md) - 关键代码解析
+  - [实践任务](./learn/04-实践任务.md) - 实践练习任务
+  - [学习检查清单](./learn/05-检查清单.md) - 学习进度跟踪
+
 ### 认证相关
 - [NextAuth.js v5 完整教程](./nextauth-v5-guide.md) - NextAuth.js v5 的详细使用指南
 - [OAuth 设置指南](./OAUTH_SETUP_GUIDE.md) - GitHub 和 Google OAuth 登录配置
