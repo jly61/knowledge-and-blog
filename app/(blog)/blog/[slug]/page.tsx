@@ -1,14 +1,15 @@
 import { getPostBySlug } from "@/app/actions/posts"
+import { getPostComments } from "@/app/actions/comments"
 import { getCurrentUser } from "@/lib/auth-server"
 import { notFound } from "next/navigation"
 import { formatDate, extractExcerpt } from "@/lib/utils"
 import { NoteContent } from "@/components/notes/note-content"
+import { CommentList } from "@/components/comments/comment-list"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { DeletePostButton } from "@/components/posts/delete-post-button"
 import Link from "next/link"
 import type { Metadata } from "next"
-import { log } from "console"
 
 export const dynamic = "force-dynamic"
 
@@ -73,6 +74,9 @@ export default async function PostDetailPage({
   // 检查当前用户是否是文章作者
   const user = await getCurrentUser()
   const isAuthor = user && user.id === post.user.id
+
+  // 获取评论
+  const comments = await getPostComments(post.id)
 
   // 创建笔记标题映射（用于双向链接）
   const noteTitleMap = new Map<string, string>()
@@ -229,6 +233,9 @@ export default async function PostDetailPage({
           </Card>
         )}
       </article>
+
+      {/* 评论区域 */}
+      <CommentList postId={post.id} comments={comments} currentUserId={user?.id} />
     </div>
   )
 }
