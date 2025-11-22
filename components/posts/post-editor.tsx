@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
 import { DeletePostButton } from "@/components/posts/delete-post-button"
+import { ImageUploadButton } from "@/components/upload/image-upload-button"
 import { toast } from "sonner"
 import { Loader2 } from "lucide-react"
 
@@ -91,6 +92,31 @@ export function PostEditor({ post, categories, tags }: PostEditorProps) {
     )
   }
 
+  const handleImageUpload = (url: string) => {
+    // 获取文本区域引用
+    const textarea = document.getElementById("content") as HTMLTextAreaElement
+    if (!textarea) return
+
+    // 获取光标位置
+    const start = textarea.selectionStart
+    const end = textarea.selectionEnd
+    const textBefore = content.substring(0, start)
+    const textAfter = content.substring(end)
+
+    // 插入 Markdown 图片语法
+    const imageMarkdown = `![图片](${url})`
+    const newContent = textBefore + imageMarkdown + textAfter
+
+    setContent(newContent)
+
+    // 设置光标位置到插入内容之后
+    setTimeout(() => {
+      textarea.focus()
+      const newCursorPos = start + imageMarkdown.length
+      textarea.setSelectionRange(newCursorPos, newCursorPos)
+    }, 0)
+  }
+
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <Card>
@@ -111,7 +137,14 @@ export function PostEditor({ post, categories, tags }: PostEditorProps) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="content">内容</Label>
+            <div className="flex items-center justify-between">
+              <Label htmlFor="content">内容</Label>
+              <ImageUploadButton
+                onUploadComplete={handleImageUpload}
+                variant="outline"
+                size="sm"
+              />
+            </div>
             <Textarea
               id="content"
               value={content}
@@ -122,7 +155,7 @@ export function PostEditor({ post, categories, tags }: PostEditorProps) {
               className="font-mono"
             />
             <p className="text-sm text-muted-foreground">
-              提示：使用 <code>[[笔记标题]]</code> 创建双向链接
+              提示：使用 <code>[[笔记标题]]</code> 创建双向链接，点击"上传图片"按钮插入图片
             </p>
           </div>
 

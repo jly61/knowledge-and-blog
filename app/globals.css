@@ -2,6 +2,31 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Tiptap 编辑器样式 */
+.ProseMirror {
+  outline: none;
+}
+
+.ProseMirror p.is-editor-empty:first-child::before {
+  color: #adb5bd;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+/* 代码高亮样式 */
+.hljs {
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+}
+
+.hljs code {
+  background: transparent;
+  padding: 0;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;

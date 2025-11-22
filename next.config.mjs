@@ -12,7 +12,7 @@ const nextConfig = {
   },
   experimental: {
     serverActions: {
-      bodySizeLimit: '2mb',
+      bodySizeLimit: '10mb', // 支持更大的图片上传（最大 5MB 单文件，但需要更大的 body 限制）
     },
   },
   // 生产环境优化

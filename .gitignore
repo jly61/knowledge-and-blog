@@ -44,6 +44,10 @@ lib/**/*.js.map
 # prisma
 /prisma/migrations
 
+# uploads (保留目录，忽略文件)
+/public/uploads/*
+!/public/uploads/.gitkeep
+
 .idea
 .vscode
 *.suo

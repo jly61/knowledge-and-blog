@@ -11,10 +11,10 @@ import { DeleteNoteButton } from "@/components/notes/delete-note-button"
 // 使用类型推断，避免直接导入可能不存在的类型
 type Category = { id: string; name: string }
 type Tag = { id: string; name: string }
-import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
+import { MarkdownSplitEditor } from "@/components/editor/markdown-split-editor"
 
 // 编辑笔记时需要的类型（不需要 links 和 backlinks）
 type NoteForEditor = {
@@ -31,9 +31,10 @@ interface NoteEditorProps {
   note?: NoteForEditor
   categories: Category[]
   tags: Tag[]
+  noteTitleMap?: Map<string, string>
 }
 
-export function NoteEditor({ note, categories, tags }: NoteEditorProps) {
+export function NoteEditor({ note, categories, tags, noteTitleMap = new Map() }: NoteEditorProps) {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
   const [title, setTitle] = useState(note?.title || "")
@@ -88,6 +89,7 @@ export function NoteEditor({ note, categories, tags }: NoteEditorProps) {
     )
   }
 
+
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="space-y-2">
@@ -103,18 +105,12 @@ export function NoteEditor({ note, categories, tags }: NoteEditorProps) {
 
       <div className="space-y-2">
         <Label htmlFor="content">内容</Label>
-        <Textarea
-          id="content"
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
+        <MarkdownSplitEditor
+          content={content}
+          onChange={setContent}
+          noteTitleMap={noteTitleMap}
           placeholder="使用 Markdown 格式编写，支持 [[双向链接]]..."
-          rows={20}
-          required
-          className="font-mono"
         />
-        <p className="text-sm text-muted-foreground">
-          提示：使用 <code>[[笔记标题]]</code> 创建双向链接
-        </p>
       </div>
 
       <div className="grid grid-cols-2 gap-4">

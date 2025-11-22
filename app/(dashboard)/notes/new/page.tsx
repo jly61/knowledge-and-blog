@@ -9,19 +9,32 @@ export default async function NewNotePage() {
     redirect("/login")
   }
 
-  const [categories, tags] = await Promise.all([
+  const [categories, tags, allNotes] = await Promise.all([
     db.category.findMany({
       orderBy: { name: "asc" },
     }),
     db.tag.findMany({
       orderBy: { name: "asc" },
     }),
+    db.note.findMany({
+      where: { userId: user.id },
+      select: {
+        id: true,
+        title: true,
+      },
+    }),
   ])
+
+  const noteTitleMap = new Map<string, string>()
+  allNotes.forEach((n) => {
+    noteTitleMap.set(n.title.toLowerCase(), n.id)
+    noteTitleMap.set(n.title, n.id)
+  })
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
       <h1 className="text-3xl font-bold mb-6">新建笔记</h1>
-      <NoteEditor categories={categories} tags={tags} />
+      <NoteEditor categories={categories} tags={tags} noteTitleMap={noteTitleMap} />
     </div>
   )
 }
