@@ -40,9 +40,6 @@ export default async function DashboardLayout({
                 <Link href="/graph">
                   <Button variant="ghost">知识图谱</Button>
                 </Link>
-                <Link href="/daily">
-                  <Button variant="ghost">每日笔记</Button>
-                </Link>
               </nav>
             </div>
             <div className="flex items-center gap-4">

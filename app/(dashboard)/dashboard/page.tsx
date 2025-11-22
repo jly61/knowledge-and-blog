@@ -83,11 +83,6 @@ export default async function DashboardPage() {
                 创建新笔记
               </Button>
             </Link>
-            <Link href="/daily">
-              <Button className="w-full" variant="outline">
-                今日笔记
-              </Button>
-            </Link>
             <Link href="/graph">
               <Button className="w-full" variant="outline">
                 知识图谱
