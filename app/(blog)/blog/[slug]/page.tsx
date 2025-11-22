@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { DeletePostButton } from "@/components/posts/delete-post-button"
 import Link from "next/link"
 import type { Metadata } from "next"
+import { log } from "console"
 
 export const dynamic = "force-dynamic"
 

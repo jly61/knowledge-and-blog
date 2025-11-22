@@ -378,6 +378,82 @@ export async function getUserPosts() {
 }
 
 /**
+ * 根据分类 slug 获取文章列表
+ */
+export async function getPostsByCategorySlug(slug: string) {
+  const category = await db.category.findUnique({
+    where: { slug },
+  })
+
+  if (!category) {
+    return null
+  }
+
+  const posts = await db.post.findMany({
+    where: {
+      published: true,
+      categoryId: category.id,
+    },
+    include: {
+      category: true,
+      tags: true,
+      user: {
+        select: {
+          name: true,
+          image: true,
+        },
+      },
+    },
+    orderBy: { publishedAt: "desc" },
+  })
+
+  return {
+    category,
+    posts,
+  }
+}
+
+/**
+ * 根据标签 slug 获取文章列表
+ */
+export async function getPostsByTagSlug(slug: string) {
+  const tag = await db.tag.findUnique({
+    where: { slug },
+  })
+
+  if (!tag) {
+    return null
+  }
+
+  const posts = await db.post.findMany({
+    where: {
+      published: true,
+      tags: {
+        some: {
+          id: tag.id,
+        },
+      },
+    },
+    include: {
+      category: true,
+      tags: true,
+      user: {
+        select: {
+          name: true,
+          image: true,
+        },
+      },
+    },
+    orderBy: { publishedAt: "desc" },
+  })
+
+  return {
+    tag,
+    posts,
+  }
+}
+
+/**
  * 提取摘要
  */
 function extractExcerpt(content: string, maxLength: number = 200): string {
