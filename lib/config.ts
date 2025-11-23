@@ -7,9 +7,13 @@
 type Environment = 'development' | 'preview' | 'production'
 
 function getEnv(): Environment {
-  const env = process.env.NODE_ENV || 'development'
+  // 优先检查 VERCEL_ENV（Vercel 预览环境）
+  if (process.env.VERCEL_ENV === 'preview') return 'preview'
+  
+  const env = (process.env.NODE_ENV || 'development') as string
   if (env === 'production') return 'production'
-  if (env === 'preview' || process.env.VERCEL_ENV === 'preview') return 'preview'
+  // 支持自定义 'preview' 值（虽然 NODE_ENV 标准值不包含，但允许自定义）
+  if (env === 'preview') return 'preview'
   return 'development'
 }
 
