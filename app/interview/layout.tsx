@@ -2,6 +2,13 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { getCurrentUser } from "@/lib/auth-server"
 import { InterviewLayoutWithPath } from "@/app/interview/interview-layout-with-path"
+import { getInterviewTree } from "@/app/actions/interview"
+import { cache } from "react"
+
+// 缓存树形结构
+const getCachedTree = cache(async () => {
+  return await getInterviewTree()
+})
 
 export default async function InterviewLayout({
   children,
@@ -9,6 +16,7 @@ export default async function InterviewLayout({
   children: React.ReactNode
 }) {
   const user = await getCurrentUser()
+  const tree = await getCachedTree()
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -51,7 +59,7 @@ export default async function InterviewLayout({
         <div className="container mx-auto px-6 py-8 max-w-7xl">
           <div className="grid grid-cols-12 gap-6">
             {/* 左侧导航 - 在 layout 中渲染，保持稳定 */}
-            <InterviewLayoutWithPath />
+            <InterviewLayoutWithPath initialTree={tree} />
             {/* 右侧内容 - 由页面组件渲染 */}
             <div className="col-span-12 lg:col-span-9">
               {children}
