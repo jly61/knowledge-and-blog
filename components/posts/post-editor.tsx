@@ -155,7 +155,7 @@ export function PostEditor({ post, categories, tags }: PostEditorProps) {
               className="font-mono"
             />
             <p className="text-sm text-muted-foreground">
-              提示：使用 <code>[[笔记标题]]</code> 创建双向链接，点击"上传图片"按钮插入图片
+              提示：使用 <code>[[笔记标题]]</code> 创建双向链接，点击&quot;上传图片&quot;按钮插入图片
             </p>
           </div>
 

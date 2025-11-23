@@ -33,6 +33,9 @@
 - [云服务器部署指南](./DEPLOYMENT_SERVER.md) - Docker Compose 或直接部署到服务器（推荐有服务器的用户）
 - [快速部署指南](./DEPLOYMENT_QUICK_START.md) - 5 分钟快速部署到 Vercel（无服务器）
 - [完整部署指南](./DEPLOYMENT_GUIDE.md) - 详细的部署方案和配置说明
+- [环境变量配置指南](./DEPLOYMENT_ENV.md) - 环境变量详细说明和配置方法
+- [部署回滚指南](./DEPLOYMENT_ROLLBACK.md) - 生产环境回滚操作指南
+- [高级部署配置](./DEPLOYMENT_ADVANCED.md) - CI/CD、多环境、回滚等高级功能
 
 ## 📖 快速查找
 

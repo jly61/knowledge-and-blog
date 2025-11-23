@@ -28,6 +28,8 @@ pnpm-debug.log*
 # local env files
 .env*.local
 .env
+# 但保留 .env.example 作为模板
+!.env.example
 
 # vercel
 .vercel

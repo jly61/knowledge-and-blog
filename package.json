@@ -12,7 +12,9 @@
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate dev",
     "db:studio": "prisma studio",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "validate-env": "tsx scripts/validate-env.ts",
+    "switch-env": "tsx scripts/switch-env.ts"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.4.0",
@@ -77,6 +79,7 @@
     "eslint-config-next": "14.2.3",
     "prisma": "^5.15.0",
     "react-dev-inspector": "^2.0.1",
+    "tsx": "^4.20.6",
     "typescript": "^5.4.5"
   }
 }

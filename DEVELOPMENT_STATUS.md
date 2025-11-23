@@ -155,11 +155,23 @@
   - ✅ Vercel 部署配置
   - ✅ 环境变量配置（基础）
   - ✅ 数据库迁移配置
-- [ ] 部署配置（高级）
-  - [ ] 生产环境环境变量管理（环境变量加密、版本控制）
-  - [ ] CI/CD 自动化构建和部署（GitHub Actions / Vercel 自动部署）
-  - [ ] 多环境配置（开发/测试/生产环境隔离）
-  - [ ] 部署回滚机制
+- ✅ 部署配置（高级）
+  - ✅ 生产环境环境变量管理
+    - ✅ 环境变量验证脚本（scripts/validate-env.ts）
+    - ✅ 环境变量模板（.env.example）
+    - ✅ 环境变量文档（docs/DEPLOYMENT_ENV.md）
+  - ✅ CI/CD 自动化构建和部署
+    - ✅ GitHub Actions CI 工作流（.github/workflows/ci.yml）
+    - ✅ GitHub Actions 预览部署（.github/workflows/deploy-preview.yml）
+    - ✅ 自动化测试和构建检查
+  - ✅ 多环境配置
+    - ✅ 环境配置管理（lib/config.ts）
+    - ✅ 环境切换脚本（scripts/switch-env.ts）
+    - ✅ 环境隔离支持（development/preview/production）
+  - ✅ 部署回滚机制
+    - ✅ 回滚脚本（scripts/rollback.sh）
+    - ✅ 回滚文档（docs/DEPLOYMENT_ROLLBACK.md）
+    - ✅ Vercel 回滚支持
 - [ ] 监控告警
   - [ ] 性能监控（Vercel Analytics / Sentry Performance）
   - [ ] 错误追踪（Sentry / LogRocket）
@@ -287,12 +299,12 @@
 - **第五阶段（高级功能）**：25% 🚧
   - ✅ MOC (Map of Contents)
   - ✅ 面试题库功能
-- **第六阶段（优化部署）**：15% 🚧
+- **第六阶段（优化部署）**：40% 🚧
   - ✅ 加载状态
   - ✅ 部署配置（基础）
   - [ ] 部署配置（高级）
   - [ ] 监控告警
   - [ ] 备份策略
 
-**总体完成度：约 78%**
+**总体完成度：约 80%**
 
