@@ -18,6 +18,17 @@ const nextConfig = {
   // 生产环境优化
   compress: true,
   poweredByHeader: false,
+  // 忽略 Sentry/OpenTelemetry 的构建警告
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      config.ignoreWarnings = [
+        { module: /@opentelemetry/ },
+        { module: /require-in-the-middle/ },
+        /Critical dependency/,
+      ]
+    }
+    return config
+  },
 };
 
 export default nextConfig;
