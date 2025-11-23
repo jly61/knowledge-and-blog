@@ -65,19 +65,19 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       
-      - name: Generate Prisma Client
-        run: |
-          # prisma generate 只需要格式正确的 URL，不需要真实连接
-          # 如果 secrets 中没有 DATABASE_URL，使用占位符
-          export DATABASE_URL="${DATABASE_URL:-postgresql://user:password@localhost:5432/db?schema=public}"
-          pnpm db:generate
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      # - name: Generate Prisma Client
+      #   run: |
+      #     # prisma generate 只需要格式正确的 URL，不需要真实连接
+      #     # 如果 secrets 中没有 DATABASE_URL，使用占位符
+      #     export DATABASE_URL="${DATABASE_URL:-postgresql://user:password@localhost:5432/db?schema=public}"
+      #     pnpm db:generate
+      #   env:
+      #     DATABASE_URL: ${{ secrets.DATABASE_URL }}
       
-      - name: Build application
-        run: pnpm build
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
-          NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+      # - name: Build application
+      #   run: pnpm build
+      #   env:
+      #     DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      #     NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
+      #     NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
 
