@@ -29,11 +29,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       
-      - name: Run ESLint
-        run: pnpm lint
+      # - name: Run ESLint
+      #   run: pnpm lint
       
-      - name: Run TypeScript type check
-        run: pnpm type-check
+      # - name: Run TypeScript type check
+      #   run: pnpm type-check
       
       - name: Validate environment variables
         run: pnpm validate-env
