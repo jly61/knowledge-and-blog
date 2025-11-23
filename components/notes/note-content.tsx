@@ -5,6 +5,7 @@ import remarkGfm from "remark-gfm"
 import Link from "next/link"
 import { LinkPreview } from "@/components/notes/link-preview"
 import type { Components } from "react-markdown"
+import rehypeHighlight from "rehype-highlight"
 
 interface NoteContentProps {
   content: string
@@ -97,6 +98,7 @@ export function NoteContent({ content, noteTitleMap }: NoteContentProps) {
                     prose-img:rounded-lg prose-img:shadow-md prose-img:my-6 prose-img:border prose-img:border-border">
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
+        rehypePlugins={[rehypeHighlight]}
         components={markdownComponents}
       >
         {processedContent}

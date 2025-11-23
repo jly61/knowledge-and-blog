@@ -2,9 +2,11 @@
 
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
+import rehypeHighlight from "rehype-highlight"
 import { Card, CardContent } from "@/components/ui/card"
 import { useMemo } from "react"
 import type { Components } from "react-markdown"
+import "highlight.js/styles/github-dark.css"
 
 interface InterviewContentProps {
   content?: string
@@ -145,7 +147,8 @@ export function InterviewContent({ content, toc }: InterviewContentProps) {
                     prose-strong:text-foreground prose-strong:font-bold
                     prose-em:text-foreground prose-em:italic
                     prose-code:text-foreground prose-code:bg-muted prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm prose-code:font-mono
-                    prose-pre:bg-muted prose-pre:text-foreground prose-pre:rounded-lg prose-pre:p-4 prose-pre:overflow-x-auto prose-pre:border prose-pre:border-border prose-pre:shadow-sm
+                    prose-pre:bg-[#0d1117] dark:prose-pre:bg-[#0d1117] prose-pre:text-foreground prose-pre:rounded-lg prose-pre:p-4 prose-pre:overflow-x-auto prose-pre:border prose-pre:border-border prose-pre:shadow-sm
+                    prose-pre:code:bg-transparent prose-pre:code:text-inherit prose-pre:code:p-0 prose-pre:code:before:content-none prose-pre:code:after:content-none
                     prose-blockquote:border-l-4 prose-blockquote:border-primary prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:my-4 prose-blockquote:text-muted-foreground prose-blockquote:bg-muted/30 prose-blockquote:py-2 prose-blockquote:rounded-r
                     prose-ul:list-disc prose-ul:my-4 prose-ul:pl-6
                     prose-ol:list-decimal prose-ol:my-4 prose-ol:pl-6
@@ -156,7 +159,11 @@ export function InterviewContent({ content, toc }: InterviewContentProps) {
                     prose-th:px-4 prose-th:py-2 prose-th:text-left prose-th:font-semibold prose-th:bg-muted/50
                     prose-td:px-4 prose-td:py-2 prose-td:border-b prose-td:border-border
                     prose-img:rounded-lg prose-img:shadow-md prose-img:my-6 prose-img:border prose-img:border-border">
-          <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
+          <ReactMarkdown
+            remarkPlugins={[remarkGfm]}
+            rehypePlugins={[rehypeHighlight]}
+            components={markdownComponents}
+          >
             {content}
           </ReactMarkdown>
         </div>
