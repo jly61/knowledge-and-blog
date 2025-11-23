@@ -5,7 +5,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXTAUTH_URL || 'https://knowledge-and-blog.vercel.app'
 
   // 获取所有已发布的文章
-g  // 在构建时，如果数据库不可用，返回空数组
+  // 在构建时，如果数据库不可用，返回空数组
   let posts: Array<{
     slug: string
     updatedAt: Date | null
