@@ -1,0 +1,5 @@
+---
+globs: interview/**
+alwaysApply: false
+---
+- 在编写md文档时，如果与nextjs有关，nextjs始终使用 App Router，也就是nextjs 13+
