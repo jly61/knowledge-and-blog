@@ -6,6 +6,7 @@ import rehypeHighlight from "rehype-highlight"
 import { Card, CardContent } from "@/components/ui/card"
 import { useMemo } from "react"
 import type { Components } from "react-markdown"
+import type { ReactNode } from "react"
 import "highlight.js/styles/github-dark.css"
 
 interface InterviewContentProps {
@@ -13,30 +14,72 @@ interface InterviewContentProps {
   toc?: Array<{ level: number; text: string; id: string }>
 }
 
-// 生成标题 ID 的辅助函数（与服务端逻辑一致）
+// 生成标题 ID 的辅助函数（与服务端逻辑一致，支持中文）
 function generateHeadingId(text: string): string {
-  let cleanText = String(text)
+  let cleanText = String(text).trim()
   // 移除标题中的链接标记
   cleanText = cleanText.replace(/\[([^\]]+)\]\([^\)]+\)/g, "$1")
-  // 生成 ID（用于锚点）
-  return cleanText
-    .toLowerCase()
-    .replace(/[^\w\s-]/g, "")
-    .replace(/\s+/g, "-")
+  
+  // 检查是否包含中文字符
+  const hasChinese = /[\u4e00-\u9fa5]/.test(cleanText)
+  
+  if (hasChinese) {
+    // 对于中文标题，使用 URL 编码但保持可读性
+    let id = cleanText
+      .toLowerCase()
+      // 保留中文字符、字母、数字、空格和连字符
+      .replace(/[^\u4e00-\u9fa5\w\s-]/g, "")
+      // 将多个空格替换为单个连字符
+      .replace(/\s+/g, "-")
+      // 移除首尾连字符
+      .replace(/^-+|-+$/g, "")
+    
+    // 如果处理后为空，使用编码方式
+    if (!id || id === "") {
+      id = encodeURIComponent(cleanText)
+        .replace(/%/g, "-")
+        .toLowerCase()
+    }
+    
+    return id
+  } else {
+    // 对于英文标题，使用原来的方式
+    let id = cleanText
+      .toLowerCase()
+      .replace(/[^\w\s-]/g, "")
+      .replace(/\s+/g, "-")
+      .replace(/^-+|-+$/g, "")
+    
+    // 如果处理后为空，使用时间戳
+    if (!id || id === "") {
+      id = `heading-${Date.now()}`
+    }
+    
+    return id
+  }
 }
 
 export function InterviewContent({ content, toc }: InterviewContentProps) {
-  // 从 TOC 创建文本到 ID 的映射
+  // 从 TOC 创建文本到 ID 的直接映射（使用原始文本作为 key，最准确）
+  const textToIdDirectMap = useMemo(() => {
+    const map = new Map<string, string>()
+    if (toc) {
+      toc.forEach((item) => {
+        // 使用原始文本作为 key（不进行任何处理）
+        map.set(item.text, item.id)
+      })
+    }
+    return map
+  }, [toc])
+
+  // 从 TOC 创建文本到 ID 的映射（使用生成的 ID 作为 key，作为后备）
   const textToIdMap = useMemo(() => {
     const map = new Map<string, string>()
     if (toc) {
       toc.forEach((item) => {
-        // 使用清理后的文本作为 key
-        const cleanText = item.text
-          .toLowerCase()
-          .replace(/[^\w\s-]/g, "")
-          .replace(/\s+/g, "-")
-        map.set(cleanText, item.id)
+        // 使用与服务端相同的 ID 生成逻辑作为 key
+        const key = generateHeadingId(item.text)
+        map.set(key, item.id)
       })
     }
     return map
@@ -46,15 +89,41 @@ export function InterviewContent({ content, toc }: InterviewContentProps) {
   const markdownComponents: Components = useMemo(() => {
     const idCounter = new Map<string, number>()
 
-    const getHeadingId = (text: string): string => {
-      const baseId = generateHeadingId(text)
+    // 提取文本内容的辅助函数（处理 React 元素）
+    const extractText = (children: ReactNode): string => {
+      if (typeof children === 'string') {
+        return children
+      }
+      if (typeof children === 'number') {
+        return String(children)
+      }
+      if (Array.isArray(children)) {
+        return children.map(extractText).join('')
+      }
+      if (children && typeof children === 'object' && 'props' in children) {
+        return extractText(children.props.children)
+      }
+      return ''
+    }
+
+    const getHeadingId = (children: ReactNode): string => {
+      // 提取纯文本内容
+      const text = extractText(children)
+      const cleanText = text.trim().replace(/\[([^\]]+)\]\([^\)]+\)/g, "$1")
       
-      // 尝试从 TOC 映射中获取 ID
+      // 首先尝试直接从文本映射中获取 ID（最准确）
+      if (textToIdDirectMap.has(cleanText)) {
+        return textToIdDirectMap.get(cleanText)!
+      }
+      
+      // 如果直接映射中没有，尝试使用生成的 baseId 查找
+      const baseId = generateHeadingId(cleanText)
       if (textToIdMap.has(baseId)) {
         return textToIdMap.get(baseId)!
       }
       
-      // 如果 TOC 中没有，处理重复 ID
+      // 如果 TOC 中都没有，说明这是新出现的标题（不应该发生，但作为后备）
+      // 使用计数器处理重复，但这种情况应该避免
       if (idCounter.has(baseId)) {
         const count = idCounter.get(baseId)! + 1
         idCounter.set(baseId, count)
@@ -67,8 +136,7 @@ export function InterviewContent({ content, toc }: InterviewContentProps) {
 
     return {
       h1: ({ children, ...props }) => {
-        const text = String(children)
-        const id = getHeadingId(text)
+        const id = getHeadingId(children)
         return (
           <h1 id={id} {...props} className="scroll-mt-20">
             {children}
@@ -76,8 +144,7 @@ export function InterviewContent({ content, toc }: InterviewContentProps) {
         )
       },
       h2: ({ children, ...props }) => {
-        const text = String(children)
-        const id = getHeadingId(text)
+        const id = getHeadingId(children)
         return (
           <h2 id={id} {...props} className="scroll-mt-20">
             {children}
@@ -85,8 +152,7 @@ export function InterviewContent({ content, toc }: InterviewContentProps) {
         )
       },
       h3: ({ children, ...props }) => {
-        const text = String(children)
-        const id = getHeadingId(text)
+        const id = getHeadingId(children)
         return (
           <h3 id={id} {...props} className="scroll-mt-20">
             {children}
@@ -94,8 +160,7 @@ export function InterviewContent({ content, toc }: InterviewContentProps) {
         )
       },
       h4: ({ children, ...props }) => {
-        const text = String(children)
-        const id = getHeadingId(text)
+        const id = getHeadingId(children)
         return (
           <h4 id={id} {...props} className="scroll-mt-20">
             {children}
@@ -103,8 +168,7 @@ export function InterviewContent({ content, toc }: InterviewContentProps) {
         )
       },
       h5: ({ children, ...props }) => {
-        const text = String(children)
-        const id = getHeadingId(text)
+        const id = getHeadingId(children)
         return (
           <h5 id={id} {...props} className="scroll-mt-20">
             {children}
@@ -112,8 +176,7 @@ export function InterviewContent({ content, toc }: InterviewContentProps) {
         )
       },
       h6: ({ children, ...props }) => {
-        const text = String(children)
-        const id = getHeadingId(text)
+        const id = getHeadingId(children)
         return (
           <h6 id={id} {...props} className="scroll-mt-20">
             {children}
@@ -121,7 +184,7 @@ export function InterviewContent({ content, toc }: InterviewContentProps) {
         )
       },
     }
-  }, [textToIdMap])
+  }, [textToIdMap, textToIdDirectMap])
 
   if (!content) {
     return (
