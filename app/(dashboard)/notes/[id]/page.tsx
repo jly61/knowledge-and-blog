@@ -3,6 +3,7 @@ import { db } from "@/lib/db"
 import { redirect } from "next/navigation"
 import { NoteView } from "@/components/notes/note-view"
 import { MOCLinksPanel } from "@/components/moc/moc-links-panel"
+import { ChatSidebar } from "@/components/ai/chat-sidebar"
 import { Button } from "@/components/ui/button"
 import { DeleteNoteButton } from "@/components/notes/delete-note-button"
 import Link from "next/link"
@@ -144,6 +145,7 @@ export default async function NoteDetailPage({
           />
         </div>
       )}
+      <ChatSidebar noteId={note.id} noteTitle={note.title} />
     </div>
   )
 }

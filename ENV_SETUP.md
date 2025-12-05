@@ -55,6 +55,24 @@ REDIS_URL="redis://localhost:6379"
 RESEND_API_KEY="your-resend-api-key"
 ```
 
+### AI 功能（可选）
+
+```env
+# 方案 1：OpenAI API（推荐，需要付费）
+OPENAI_API_KEY="sk-your-openai-api-key"
+
+# 方案 2：Ollama 本地模型（免费，推荐）
+# 需要先安装 Ollama: https://ollama.ai
+# 安装后运行: ollama serve
+# 下载模型: ollama pull llama3.1:8b
+OLLAMA_BASE_URL="http://localhost:11434"  # 可选，默认就是这个地址
+```
+
+**注意**：
+- 如果配置了 `OPENAI_API_KEY`，将优先使用 OpenAI
+- 如果没有配置 `OPENAI_API_KEY`，将自动使用 Ollama
+- Ollama 需要先安装并运行服务，然后下载模型
+
 ## 生成 NEXTAUTH_SECRET
 
 可以使用以下命令生成一个安全的密钥：

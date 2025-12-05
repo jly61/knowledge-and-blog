@@ -27,6 +27,10 @@
 
 ### 开发相关
 - [实现指南](./IMPLEMENTATION_GUIDE.md) - 核心功能的实现思路和代码示例
+- [AI 功能开发规划](./AI_FEATURES_PLAN.md) - AI 功能开发计划和技术实现方案
+- [AI 功能快速开始](./AI_QUICK_START.md) - AI 功能快速设置和使用指南
+- [AI 功能教学文档](./AI_FEATURES_TUTORIAL.md) - AI 对话功能完整实现教学（架构、代码、最佳实践）
+- [Ollama 设置指南](./OLLAMA_SETUP.md) - Ollama 本地模型详细设置
 - [pnpm 迁移指南](./PNPM_MIGRATION.md) - 从 npm 迁移到 pnpm 的说明
 
 ### 部署相关
@@ -57,6 +61,8 @@
 - **笔记管理功能** → [IMPLEMENTATION_GUIDE.md](./IMPLEMENTATION_GUIDE.md)
 - **双向链接系统** → [IMPLEMENTATION_GUIDE.md](./IMPLEMENTATION_GUIDE.md#双向链接系统)
 - **知识图谱** → [IMPLEMENTATION_GUIDE.md](./IMPLEMENTATION_GUIDE.md#知识图谱)
+- **AI 功能开发** → [AI_FEATURES_PLAN.md](./AI_FEATURES_PLAN.md)
+- **学习 AI 功能实现** → [AI_FEATURES_TUTORIAL.md](./AI_FEATURES_TUTORIAL.md)
 
 ## 🔄 文档更新
 

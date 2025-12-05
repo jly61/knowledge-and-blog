@@ -19,6 +19,14 @@
 - 评论系统
 - RSS 订阅
 
+### 🤖 AI 功能（开发中）
+- AI 对话侧边栏
+- 知识库智能问答（RAG）
+- AI 自动生成摘要和 SEO
+- AI 标签和链接推荐
+- 思维导图自动生成
+- 编辑器 AI 辅助（计划中）
+
 ## 技术栈
 
 - **框架**: Next.js 14 (App Router)
@@ -102,6 +110,7 @@ knowledge-blog/
 - [OAuth 设置指南](./docs/QUICK_OAUTH_SETUP.md)
 - [数据库设置指南](./docs/SETUP_DATABASE.md)
 - [实现指南](./docs/IMPLEMENTATION_GUIDE.md)
+- [AI 功能开发规划](./docs/AI_FEATURES_PLAN.md)
 
 ## 许可证
 
