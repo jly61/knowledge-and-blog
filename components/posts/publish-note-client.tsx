@@ -4,6 +4,7 @@ import { useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
 import { publishNoteAsPost } from "@/app/actions/posts"
 import { generateSEO } from "@/app/actions/ai/seo"
+import { recommendTags } from "@/app/actions/ai/tags"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -46,6 +47,41 @@ export function PublishNoteClient({ note, categories, tags }: PublishNoteClientP
   )
   const [coverImage, setCoverImage] = useState("")
   const [isGeneratingSEO, setIsGeneratingSEO] = useState(false)
+  const [isRecommendingTags, setIsRecommendingTags] = useState(false)
+
+  /**
+   * 使用 AI 推荐标签和分类
+   */
+  const handleRecommendTags = async () => {
+    setIsRecommendingTags(true)
+    try {
+      const recommendation = await recommendTags(note.title, note.content, selectedTagIds)
+
+      // 应用推荐的标签（合并，不覆盖已选择的）
+      if (recommendation.tagIds.length > 0) {
+        const newTags = [...new Set([...selectedTagIds, ...recommendation.tagIds])]
+        setSelectedTagIds(newTags)
+        toast.success(`已推荐 ${recommendation.tagIds.length} 个标签`)
+      } else {
+        toast.info("未找到合适的标签推荐")
+      }
+
+      // 应用推荐的分类（如果推荐了分类且当前没有分类）
+      if (recommendation.categoryId && categoryId === "none") {
+        setCategoryId(recommendation.categoryId)
+        toast.success("已推荐分类")
+      }
+    } catch (error) {
+      console.error("Tag recommendation error:", error)
+      toast.error(
+        error instanceof Error
+          ? `推荐失败: ${error.message}`
+          : "标签推荐失败，请稍后重试"
+      )
+    } finally {
+      setIsRecommendingTags(false)
+    }
+  }
 
   /**
    * 使用 AI 生成 SEO 元数据
@@ -204,7 +240,29 @@ export function PublishNoteClient({ note, categories, tags }: PublishNoteClientP
           </div>
 
           <div>
-            <Label>标签</Label>
+            <div className="flex items-center justify-between mb-2">
+              <Label>标签</Label>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={handleRecommendTags}
+                disabled={isRecommendingTags || isPending}
+                className="gap-2"
+              >
+                {isRecommendingTags ? (
+                  <>
+                    <Spinner size="sm" />
+                    推荐中...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="w-4 h-4" />
+                    AI 推荐
+                  </>
+                )}
+              </Button>
+            </div>
             <div className="flex flex-wrap gap-2 mt-2 p-2 border rounded-md min-h-[40px]">
               {tags.length === 0 ? (
                 <span className="text-sm text-muted-foreground">暂无标签</span>
@@ -226,6 +284,9 @@ export function PublishNoteClient({ note, categories, tags }: PublishNoteClientP
                 ))
               )}
             </div>
+            <p className="text-sm text-muted-foreground mt-2">
+              点击"AI 推荐"按钮可自动推荐合适的标签和分类
+            </p>
           </div>
         </CardContent>
       </Card>

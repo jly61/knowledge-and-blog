@@ -3,10 +3,13 @@
 import { useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
 import { createNote, updateNote } from "@/app/actions/notes"
+import { recommendTags } from "@/app/actions/ai/tags"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
 import { DeleteNoteButton } from "@/components/notes/delete-note-button"
+import { Sparkles } from "lucide-react"
+import { toast } from "sonner"
 
 // 使用类型推断，避免直接导入可能不存在的类型
 type Category = { id: string; name: string }
@@ -48,6 +51,46 @@ export function NoteEditor({ note, categories, tags, noteTitleMap = new Map() }:
   const [isPinned, setIsPinned] = useState(note?.isPinned || false)
   const [isFavorite, setIsFavorite] = useState(note?.isFavorite || false)
   const [isMOC, setIsMOC] = useState(note?.isMOC || false)
+  const [isRecommendingTags, setIsRecommendingTags] = useState(false)
+
+  /**
+   * 使用 AI 推荐标签和分类
+   */
+  const handleRecommendTags = async () => {
+    if (!title.trim() || !content.trim()) {
+      toast.error("请先填写标题和内容")
+      return
+    }
+
+    setIsRecommendingTags(true)
+    try {
+      const recommendation = await recommendTags(title, content, selectedTags)
+
+      // 应用推荐的标签（合并，不覆盖已选择的）
+      if (recommendation.tagIds.length > 0) {
+        const newTags = [...new Set([...selectedTags, ...recommendation.tagIds])]
+        setSelectedTags(newTags)
+        toast.success(`已推荐 ${recommendation.tagIds.length} 个标签`)
+      } else {
+        toast.info("未找到合适的标签推荐")
+      }
+
+      // 应用推荐的分类（如果推荐了分类且当前没有分类）
+      if (recommendation.categoryId && categoryId === "none") {
+        setCategoryId(recommendation.categoryId)
+        toast.success("已推荐分类")
+      }
+    } catch (error) {
+      console.error("Tag recommendation error:", error)
+      toast.error(
+        error instanceof Error
+          ? `推荐失败: ${error.message}`
+          : "标签推荐失败，请稍后重试"
+      )
+    } finally {
+      setIsRecommendingTags(false)
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -137,7 +180,29 @@ export function NoteEditor({ note, categories, tags, noteTitleMap = new Map() }:
         </div>
 
         <div className="space-y-2">
-          <Label>标签</Label>
+          <div className="flex items-center justify-between">
+            <Label>标签</Label>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={handleRecommendTags}
+              disabled={isRecommendingTags || isPending || !title.trim() || !content.trim()}
+              className="gap-2"
+            >
+              {isRecommendingTags ? (
+                <>
+                  <Spinner size="sm" />
+                  推荐中...
+                </>
+              ) : (
+                <>
+                  <Sparkles className="w-4 h-4" />
+                  AI 推荐
+                </>
+              )}
+            </Button>
+          </div>
           <div className="flex flex-wrap gap-2 p-2 border rounded-md min-h-[40px]">
             {tags.length === 0 ? (
               <span className="text-sm text-muted-foreground">暂无标签</span>
@@ -156,6 +221,9 @@ export function NoteEditor({ note, categories, tags, noteTitleMap = new Map() }:
               ))
             )}
           </div>
+          <p className="text-sm text-muted-foreground">
+            点击"AI 推荐"按钮可自动推荐合适的标签和分类
+          </p>
         </div>
       </div>
 
