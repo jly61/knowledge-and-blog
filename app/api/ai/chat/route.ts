@@ -2,29 +2,86 @@ import { openai } from "@ai-sdk/openai"
 import { streamText } from "ai"
 import { BASE_SYSTEM_PROMPT } from "@/lib/ai/prompts"
 import { getRecommendedModel } from "@/lib/ai/ollama-client"
+import { getCurrentNoteContext, retrieveRelevantNotes, buildRAGContext } from "@/lib/ai/rag"
+import { auth } from "@/lib/auth"
 
 /**
  * 聊天 API 路由
  * 支持 OpenAI 和 Ollama 本地模型
  * 优先使用 OpenAI，如果没有配置则使用 Ollama
+ * 支持 RAG（知识库问答）：如果提供了 noteId，会检索相关笔记并注入上下文
  */
 export async function POST(req: Request) {
   try {
-    const { messages } = await req.json()
+    const { messages, noteId } = await req.json()
+    
+    // 获取用户会话（用于 RAG 检索）
+    const session = await auth()
+    const userId = session?.user?.id
+
+    // 构建系统提示（包含 RAG 上下文）
+    let systemPrompt = BASE_SYSTEM_PROMPT
+    
+    // 如果提供了 noteId 和 userId，启用 RAG
+    if (noteId && userId) {
+      try {
+        // 获取当前笔记上下文
+        const currentNote = await getCurrentNoteContext(noteId, userId)
+        
+        // 获取最后一条用户消息（用于检索）
+        const lastUserMessage = messages
+          .filter((m: { role: string }) => m.role === "user")
+          .pop()
+        
+        if (lastUserMessage?.content) {
+          // 检索相关笔记
+          const relevantNotes = await retrieveRelevantNotes(
+            lastUserMessage.content,
+            userId,
+            5, // 最多检索 5 条相关笔记
+            0.7 // 相似度阈值
+          )
+
+          // 构建 RAG 上下文
+          if (currentNote || relevantNotes.length > 0) {
+            let ragContext = ""
+            
+            // 添加当前笔记上下文
+            if (currentNote) {
+              ragContext += `当前笔记：\n标题：${currentNote.title}\n内容：${currentNote.content}\n\n`
+            }
+            
+            // 添加相关笔记上下文
+            if (relevantNotes.length > 0) {
+              ragContext += "相关笔记：\n"
+              relevantNotes.forEach((note, index) => {
+                ragContext += `${index + 1}. [${note.title}] (相似度: ${(note.similarity * 100).toFixed(1)}%)\n`
+                ragContext += `${note.content.substring(0, 500)}${note.content.length > 500 ? "..." : ""}\n\n`
+              })
+            }
+            
+            systemPrompt += `\n\n${ragContext}\n请基于上述笔记内容回答问题。如果笔记中没有相关信息，请说明。回答时请引用具体的笔记标题。`
+          }
+        }
+      } catch (ragError) {
+        console.error("RAG context error:", ragError)
+        // RAG 失败不影响基础对话功能
+      }
+    }
 
     // 优先使用 OpenAI
     if (process.env.OPENAI_API_KEY) {
       const result = await streamText({
         model: openai("gpt-3.5-turbo"),
-        system: BASE_SYSTEM_PROMPT,
+        system: systemPrompt,
         messages: messages.map((msg: { role: string; content: string }) => ({
           role: msg.role as "user" | "assistant" | "system",
           content: msg.content,
         })),
-        maxTokens: 2000,
       })
 
-      return result.toDataStreamResponse()
+      // AI SDK v5 使用 toTextStreamResponse
+      return result.toTextStreamResponse()
     }
 
     // 使用 Ollama 本地模型
@@ -63,7 +120,7 @@ export async function POST(req: Request) {
       const ollamaMessages = [
         {
           role: "system",
-          content: BASE_SYSTEM_PROMPT,
+          content: systemPrompt,
         },
         ...messages.map((msg: { role: string; content: string }) => ({
           role: msg.role === "assistant" ? "assistant" : "user",

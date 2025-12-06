@@ -21,6 +21,7 @@ export function ChatSidebar({ noteId, noteTitle }: ChatSidebarProps) {
   const { messages, input, handleInputChange, handleSubmit, isLoading, error } =
     useChat({
       api: "/api/ai/chat",
+      noteId, // 传递 noteId 用于 RAG
     })
 
   // 自动滚动到底部

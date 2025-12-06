@@ -36,6 +36,8 @@ export interface UseChatOptions {
   initialMessages?: Message[]
   /** 错误回调函数 */
   onError?: (error: Error) => void
+  /** 笔记 ID（用于 RAG 上下文注入） */
+  noteId?: string
 }
 
 /**
@@ -79,7 +81,7 @@ export interface UseChatReturn {
  * ```
  */
 export function useChat(options: UseChatOptions = {}): UseChatReturn {
-  const { api = "/api/ai/chat", initialMessages = [], onError } = options
+  const { api = "/api/ai/chat", initialMessages = [], onError, noteId } = options
 
   // 消息列表状态
   const [messages, setMessages] = useState<Message[]>(initialMessages)
@@ -174,6 +176,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
               role: m.role,
               content: m.content,
             })),
+            noteId, // 传递 noteId 用于 RAG
           }),
           signal: abortControllerRef.current.signal,
         })
@@ -272,7 +275,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
         }
       }
     },
-    [input, isLoading, messages, api, onError]
+    [input, isLoading, messages, api, onError, noteId]
   )
 
   /**

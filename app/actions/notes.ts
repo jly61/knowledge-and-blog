@@ -5,6 +5,7 @@ import { getCurrentUser } from "@/lib/auth-server"
 import { parseLinks } from "@/lib/markdown/parseLinks"
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
+import { generateEmbedding } from "@/lib/ai/embeddings"
 
 /**
  * 创建笔记
@@ -39,6 +40,11 @@ export async function createNote(data: {
 
   // 解析并创建链接关系
   await updateNoteLinks(note.id, data.content)
+
+  // 生成向量嵌入（异步，不阻塞返回）
+  generateNoteEmbedding(note.id, data.title, data.content).catch((error) => {
+    console.error("Failed to generate embedding for note:", note.id, error)
+  })
 
   revalidatePath("/notes")
   return note
@@ -94,6 +100,15 @@ export async function updateNote(
   // 如果内容更新了，更新链接关系
   if (data.content !== undefined) {
     await updateNoteLinks(noteId, data.content)
+    
+    // 重新生成向量嵌入（异步，不阻塞返回）
+    generateNoteEmbedding(
+      noteId,
+      data.title || updatedNote.title,
+      data.content
+    ).catch((error) => {
+      console.error("Failed to generate embedding for note:", noteId, error)
+    })
   }
 
   revalidatePath("/notes")
@@ -226,6 +241,30 @@ export async function getNotePreview(noteId: string) {
     tags: note.tags,
     updatedAt: note.updatedAt,
     _count: note._count,
+  }
+}
+
+/**
+ * 生成笔记的向量嵌入并保存到数据库
+ */
+async function generateNoteEmbedding(noteId: string, title: string, content: string) {
+  try {
+    // 组合标题和内容作为向量化的文本
+    const textToEmbed = `${title}\n\n${content}`
+    
+    // 生成向量（带重试机制，最多重试 3 次）
+    const embedding = await generateEmbedding(textToEmbed, 3)
+    
+    // 保存到数据库（使用 Prisma $executeRaw，因为 Prisma 不支持 vector 类型）
+    await db.$executeRaw`
+      UPDATE "Note"
+      SET embedding = ${embedding}::vector
+      WHERE id = ${noteId}
+    `
+  } catch (error) {
+    console.error("Error generating embedding:", error)
+    // 不抛出错误，避免影响笔记创建/更新流程
+    // 向量生成失败不影响笔记的正常使用
   }
 }
 
