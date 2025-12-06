@@ -35,7 +35,13 @@
   - ✅ 文本长度限制和超时控制
   - ✅ 重试机制（最多 3 次，指数退避）
   - ✅ 错误处理优化（不影响笔记创建/更新）
-- [ ] AI 自动生成摘要和 SEO
+- ✅ AI 自动生成摘要和 SEO
+  - ✅ SEO 生成 Server Action（app/actions/ai/seo.ts）
+  - ✅ 发布表单 AI 生成按钮（components/posts/publish-note-client.tsx）
+  - ✅ 文章编辑器 AI 生成按钮（components/posts/post-editor.tsx）
+  - ✅ 支持 OpenAI 和 Ollama 本地模型
+  - ✅ SEO Prompt 模板（lib/ai/prompts.ts）
+  - ✅ 智能解析 AI 返回结果（JSON 和 Markdown 格式）
 - [ ] AI 自动标签推荐
 - [ ] AI 双向链接建议
 - [ ] v4.0 思维导图生成
@@ -379,14 +385,14 @@
   - ✅ 部署配置（高级）
   - ✅ 监控告警
   - [ ] 备份策略
-- **AI 功能阶段**：30% 🚧
+- **AI 功能阶段**：40% 🚧
   - ✅ v1.0 对话侧边栏（100%）
   - ✅ v2.0 知识库问答（RAG）（100%）
-  - [ ] AI 自动生成摘要和 SEO（0%）
+  - ✅ AI 自动生成摘要和 SEO（100%）
   - [ ] AI 自动标签推荐（0%）
   - [ ] AI 双向链接建议（0%）
   - [ ] v4.0 思维导图生成（0%）
   - [ ] v3.0 编辑器副驾驶（0%）
 
-**总体完成度：约 88%**
+**总体完成度：约 89%**
 

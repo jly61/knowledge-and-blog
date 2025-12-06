@@ -24,4 +24,36 @@ export const RAG_SYSTEM_PROMPT = `你是一个知识库助手，可以访问用�
 
 如果问题超出了提供的上下文范围，请诚实说明，不要编造信息。`
 
+/**
+ * SEO 生成提示词
+ *
+ * 用于生成文章的 SEO 元数据（标题、描述、摘要）
+ */
+export const SEO_GENERATION_PROMPT = `请为以下文章生成 SEO 元数据。
+
+文章标题：
+{{TITLE}}
+
+文章内容：
+{{CONTENT}}
+
+请生成以下内容（使用 JSON 格式返回）：
+1. **metaTitle**: SEO 优化后的标题（50-60 字符，包含关键词，吸引点击）
+2. **metaDescription**: SEO 描述（150-160 字符，用于 meta description，包含关键词和文章核心内容）
+3. **excerpt**: 文章摘要（150-200 字符，用于文章预览和列表页显示）
+4. **keywords**: SEO 关键词数组（3-5 个关键词，用逗号分隔）
+
+要求：
+- 标题要吸引人，包含核心关键词
+- 描述要简洁明了，突出文章价值
+- 摘要要概括文章主要内容
+- 关键词要准确反映文章主题
+
+请以 JSON 格式返回，例如：
+{
+  "metaTitle": "优化后的标题",
+  "metaDescription": "SEO 描述",
+  "excerpt": "文章摘要",
+  "keywords": ["关键词1", "关键词2", "关键词3"]
+}`
 

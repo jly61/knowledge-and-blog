@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
 import { updatePost } from "@/app/actions/posts"
+import { generateSEO } from "@/app/actions/ai/seo"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -20,6 +21,7 @@ import { DeletePostButton } from "@/components/posts/delete-post-button"
 import { ImageUploadButton } from "@/components/upload/image-upload-button"
 import { toast } from "sonner"
 import { Spinner } from "@/components/ui/spinner"
+import { Sparkles } from "lucide-react"
 
 interface PostEditorProps {
   post: {
@@ -52,6 +54,39 @@ export function PostEditor({ post, categories, tags }: PostEditorProps) {
     post.tags.map((tag) => tag.id)
   )
   const [published, setPublished] = useState(post.published)
+  const [isGeneratingSEO, setIsGeneratingSEO] = useState(false)
+
+  /**
+   * 使用 AI 生成 SEO 元数据
+   */
+  const handleGenerateSEO = async () => {
+    setIsGeneratingSEO(true)
+    try {
+      const seoData = await generateSEO(title, content)
+      
+      // 填充生成的 SEO 数据
+      if (seoData.metaTitle) {
+        setMetaTitle(seoData.metaTitle)
+      }
+      if (seoData.metaDescription) {
+        setMetaDescription(seoData.metaDescription)
+      }
+      if (seoData.excerpt) {
+        setExcerpt(seoData.excerpt)
+      }
+      
+      toast.success("SEO 元数据生成成功")
+    } catch (error) {
+      console.error("SEO generation error:", error)
+      toast.error(
+        error instanceof Error
+          ? `生成失败: ${error.message}`
+          : "SEO 生成失败，请稍后重试"
+      )
+    } finally {
+      setIsGeneratingSEO(false)
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -168,6 +203,9 @@ export function PostEditor({ post, categories, tags }: PostEditorProps) {
               placeholder="文章摘要，用于预览和 SEO"
               rows={3}
             />
+            <p className="text-sm text-muted-foreground">
+              可在下方 SEO 设置中使用 AI 生成摘要和 SEO 信息
+            </p>
           </div>
         </CardContent>
       </Card>
@@ -179,7 +217,29 @@ export function PostEditor({ post, categories, tags }: PostEditorProps) {
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="metaTitle">SEO 标题</Label>
+            <div className="flex items-center justify-between">
+              <Label htmlFor="metaTitle">SEO 标题</Label>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={handleGenerateSEO}
+                disabled={isGeneratingSEO || isPending}
+                className="gap-2"
+              >
+                {isGeneratingSEO ? (
+                  <>
+                    <Spinner size="sm" />
+                    生成中...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="w-4 h-4" />
+                    AI 生成
+                  </>
+                )}
+              </Button>
+            </div>
             <Input
               id="metaTitle"
               value={metaTitle}
@@ -200,6 +260,9 @@ export function PostEditor({ post, categories, tags }: PostEditorProps) {
               placeholder="文章描述，用于 SEO 和预览"
               rows={3}
             />
+            <p className="text-sm text-muted-foreground">
+              点击上方的"AI 生成"按钮可自动生成 SEO 标题、描述和摘要
+            </p>
           </div>
 
           <div className="space-y-2">

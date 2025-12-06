@@ -32,6 +32,7 @@
 - [AI 功能教学文档](./AI_FEATURES_TUTORIAL.md) - AI 对话功能完整实现教学（架构、代码、最佳实践）
 - [RAG 功能设置指南](./RAG_SETUP.md) - RAG（知识库问答）功能设置和使用指南
 - [RAG 功能实现总结](./RAG_IMPLEMENTATION.md) - RAG 功能实现细节和验收标准
+- [AI SEO 生成功能](./AI_SEO_GENERATION.md) - AI 自动生成摘要和 SEO 元数据功能
 - [Ollama 设置指南](./OLLAMA_SETUP.md) - Ollama 本地模型详细设置
 - [pnpm 迁移指南](./PNPM_MIGRATION.md) - 从 npm 迁移到 pnpm 的说明
 
