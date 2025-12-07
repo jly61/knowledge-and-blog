@@ -21,11 +21,13 @@
   border-radius: 0.5rem;
   overflow-x: auto;
   background: #0d1117 !important;
+  color: #c9d1d9 !important; /* GitHub Dark 主题的文字颜色 */
 }
 
 .hljs code {
   background: transparent;
   padding: 0;
+  color: inherit;
 }
 
 /* 确保代码块内的代码元素样式正确 */
@@ -33,10 +35,60 @@ pre code.hljs {
   display: block;
   overflow-x: auto;
   padding: 0;
+  color: inherit;
 }
 
 pre.hljs {
   background: #0d1117 !important;
+  color: #c9d1d9 !important;
+}
+
+/* 确保代码块内的所有元素都有正确的文字颜色 */
+pre.hljs * {
+  color: inherit !important;
+}
+
+/* 代码块内的语法高亮颜色（覆盖 highlight.js 的默认样式） */
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-literal,
+.hljs-title,
+.hljs-section,
+.hljs-doctag,
+.hljs-type,
+.hljs-name,
+.hljs-strong {
+  color: #ff7b72 !important; /* 关键字颜色 */
+}
+
+.hljs-string,
+.hljs-title,
+.hljs-section,
+.hljs-built_in,
+.hljs-literal,
+.hljs-type,
+.hljs-addition,
+.hljs-tag,
+.hljs-quote,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class {
+  color: #a5d6ff !important; /* 字符串颜色 */
+}
+
+.hljs-comment,
+.hljs-deletion,
+.hljs-meta {
+  color: #8b949e !important; /* 注释颜色 */
+}
+
+.hljs-number {
+  color: #79c0ff !important; /* 数字颜色 */
+}
+
+.hljs-function,
+.hljs-attr {
+  color: #d2a8ff !important; /* 函数颜色 */
 }
 
 @layer base {

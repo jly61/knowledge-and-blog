@@ -6,6 +6,7 @@ import Link from "next/link"
 import { LinkPreview } from "@/components/notes/link-preview"
 import type { Components } from "react-markdown"
 import rehypeHighlight from "rehype-highlight"
+import "highlight.js/styles/github-dark.css"
 
 interface NoteContentProps {
   content: string

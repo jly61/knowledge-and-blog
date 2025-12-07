@@ -17,7 +17,7 @@ type Tag = { id: string; name: string }
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
-import { MarkdownSplitEditor } from "@/components/editor/markdown-split-editor"
+import { TiptapSplitEditor } from "@/components/editor/tiptap-split-editor"
 import { Spinner } from "@/components/ui/spinner"
 
 // 编辑笔记时需要的类型（不需要 links 和 backlinks）
@@ -153,7 +153,7 @@ export function NoteEditor({ note, categories, tags, noteTitleMap = new Map() }:
 
       <div className="space-y-2">
         <Label htmlFor="content">内容</Label>
-        <MarkdownSplitEditor
+        <TiptapSplitEditor
           content={content}
           onChange={setContent}
           noteTitleMap={noteTitleMap}
