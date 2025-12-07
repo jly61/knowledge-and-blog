@@ -34,6 +34,7 @@
 - [RAG 功能实现总结](./RAG_IMPLEMENTATION.md) - RAG 功能实现细节和验收标准
 - [AI SEO 生成功能](./AI_SEO_GENERATION.md) - AI 自动生成摘要和 SEO 元数据功能
 - [AI 标签推荐功能](./AI_TAG_RECOMMENDATION.md) - AI 自动推荐标签和分类功能
+- [AI 双向链接建议](./AI_LINK_SUGGESTIONS.md) - AI 智能推荐可链接的相关笔记
 - [Ollama 设置指南](./OLLAMA_SETUP.md) - Ollama 本地模型详细设置
 - [pnpm 迁移指南](./PNPM_MIGRATION.md) - 从 npm 迁移到 pnpm 的说明
 

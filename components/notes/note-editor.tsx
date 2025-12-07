@@ -158,6 +158,8 @@ export function NoteEditor({ note, categories, tags, noteTitleMap = new Map() }:
           onChange={setContent}
           noteTitleMap={noteTitleMap}
           placeholder="使用 Markdown 格式编写，支持 [[双向链接]]..."
+          currentNoteId={note?.id}
+          enableLinkSuggestions={true}
         />
       </div>
 

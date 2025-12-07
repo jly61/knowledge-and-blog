@@ -48,7 +48,6 @@ export async function generateSEO(
       const result = await generateText({
         model: aiModel,
         prompt,
-        maxSteps: 1,
         temperature: 0.7,
       })
 
@@ -74,7 +73,15 @@ export async function generateSEO(
         ],
       })
 
-      return parseSEOResponse(response.message.content)
+      // Ollama 返回的是异步迭代器，需要获取最终结果
+      let finalContent = ""
+      for await (const chunk of response) {
+        if (chunk.message?.content) {
+          finalContent += chunk.message.content
+        }
+      }
+
+      return parseSEOResponse(finalContent)
     } catch (ollamaError) {
       console.error("Ollama SEO generation error:", ollamaError)
       throw new Error(

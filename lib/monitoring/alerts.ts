@@ -22,11 +22,13 @@ export async function sendAlert(options: AlertOptions) {
   const { level, title, message, context, tags } = options
 
   // 记录日志
-  logger[level === "error" || level === "critical" ? "error" : "warn"](
-    `Alert [${level}]: ${title} - ${message}`,
-    undefined,
-    { ...context, tags }
-  )
+  const logMessage = `Alert [${level}]: ${title} - ${message}`
+  const logContext = { ...context, tags }
+  if (level === "error" || level === "critical") {
+    logger.error(logMessage, logContext)
+  } else {
+    logger.warn(logMessage, logContext)
+  }
 
   // 发送邮件通知（如果配置了）
   if (process.env.ALERT_EMAIL_ENABLED === "true" && 
