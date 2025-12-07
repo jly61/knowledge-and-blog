@@ -8,6 +8,7 @@ import { recommendTags } from "@/app/actions/ai/tags"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { TiptapSplitEditor } from "@/components/editor/tiptap-split-editor"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import {
@@ -39,9 +40,11 @@ interface PostEditorProps {
   }
   categories: Array<{ id: string; name: string; color?: string | null }>
   tags: Array<{ id: string; name: string; color?: string | null }>
+  /** 笔记标题映射（用于双向链接） */
+  noteTitleMap?: Map<string, string>
 }
 
-export function PostEditor({ post, categories, tags }: PostEditorProps) {
+export function PostEditor({ post, categories, tags, noteTitleMap = new Map() }: PostEditorProps) {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
   const [title, setTitle] = useState(post.title)
@@ -168,30 +171,6 @@ export function PostEditor({ post, categories, tags }: PostEditorProps) {
     )
   }
 
-  const handleImageUpload = (url: string) => {
-    // 获取文本区域引用
-    const textarea = document.getElementById("content") as HTMLTextAreaElement
-    if (!textarea) return
-
-    // 获取光标位置
-    const start = textarea.selectionStart
-    const end = textarea.selectionEnd
-    const textBefore = content.substring(0, start)
-    const textAfter = content.substring(end)
-
-    // 插入 Markdown 图片语法
-    const imageMarkdown = `![图片](${url})`
-    const newContent = textBefore + imageMarkdown + textAfter
-
-    setContent(newContent)
-
-    // 设置光标位置到插入内容之后
-    setTimeout(() => {
-      textarea.focus()
-      const newCursorPos = start + imageMarkdown.length
-      textarea.setSelectionRange(newCursorPos, newCursorPos)
-    }, 0)
-  }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
@@ -213,25 +192,16 @@ export function PostEditor({ post, categories, tags }: PostEditorProps) {
           </div>
 
           <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <Label htmlFor="content">内容</Label>
-              <ImageUploadButton
-                onUploadComplete={handleImageUpload}
-                variant="outline"
-                size="sm"
-              />
-            </div>
-            <Textarea
-              id="content"
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              placeholder="使用 Markdown 格式编写..."
-              rows={20}
-              required
-              className="font-mono"
+            <Label htmlFor="content">内容</Label>
+            <TiptapSplitEditor
+              content={content}
+              onChange={setContent}
+              noteTitleMap={noteTitleMap}
+              placeholder="使用 Markdown 格式编写，支持 [[双向链接]]..."
+              enableLinkSuggestions={true}
             />
             <p className="text-sm text-muted-foreground">
-              提示：使用 <code>[[笔记标题]]</code> 创建双向链接，点击&quot;上传图片&quot;按钮插入图片
+              提示：使用 <code>[[笔记标题]]</code> 创建双向链接，工具栏可快速插入 Markdown 语法
             </p>
           </div>
 
