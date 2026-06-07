@@ -156,7 +156,7 @@ export function PublishNoteClient({ note, categories, tags }: PublishNoteClientP
         <CardContent className="space-y-4">
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label htmlFor="metaTitle">SEO 标题</Label>
+            <Label htmlFor="metaTitle">SEO 标题</Label>
               <Button
                 type="button"
                 variant="outline"
@@ -241,7 +241,7 @@ export function PublishNoteClient({ note, categories, tags }: PublishNoteClientP
 
           <div>
             <div className="flex items-center justify-between mb-2">
-              <Label>标签</Label>
+            <Label>标签</Label>
               <Button
                 type="button"
                 variant="outline"

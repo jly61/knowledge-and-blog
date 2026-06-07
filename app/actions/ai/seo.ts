@@ -43,8 +43,8 @@ export async function generateSEO(
       content.substring(0, 5000) // 限制内容长度，避免 token 过多
     )
 
-    // 优先使用 OpenAI
-    if (process.env.OPENAI_API_KEY && aiModel) {
+    // 优先使用 DeepSeek 或 OpenAI（如果配置了）
+    if (aiModel) {
       const result = await generateText({
         model: aiModel,
         prompt,

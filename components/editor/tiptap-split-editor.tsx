@@ -11,6 +11,7 @@ import { NoteContent } from "@/components/notes/note-content"
 import { ImageUploadButton } from "@/components/upload/image-upload-button"
 import { useEffect, useRef, useState } from "react"
 import { AILinkSuggestions } from "./ai-link-suggestions"
+import { AIFloatingMenu } from "./ai-floating-menu"
 import { Textarea } from "@/components/ui/textarea"
 import { MarkdownToolbar } from "./markdown-toolbar"
 import { Switch } from "@/components/ui/switch"
@@ -45,6 +46,7 @@ export function TiptapSplitEditor({
   const [isScrolling, setIsScrolling] = useState(false)
   const [cursorPosition, setCursorPosition] = useState(0)
   const [aiLinkSuggestionsEnabled, setAiLinkSuggestionsEnabled] = useState(enableLinkSuggestions)
+  const [isComposing, setIsComposing] = useState(false) // 输入法组合状态
 
   // 同步滚动处理
   const handleEditorScroll = () => {
@@ -214,8 +216,17 @@ export function TiptapSplitEditor({
             onChange={handleTextareaChange}
             onSelect={handleTextareaSelect}
             onScroll={handleEditorScroll}
+            onCompositionStart={() => setIsComposing(true)}
+            onCompositionEnd={() => setIsComposing(false)}
             placeholder={placeholder}
             className="flex-1 font-mono text-sm resize-none border-0 rounded-none focus-visible:ring-0 focus-visible:ring-offset-0"
+          />
+          {/* AI 悬浮菜单 */}
+          <AIFloatingMenu
+            textareaRef={editorRef}
+            content={content}
+            onContentChange={onChange}
+            disabled={isComposing}
           />
           {aiLinkSuggestionsEnabled && (
             <AILinkSuggestions

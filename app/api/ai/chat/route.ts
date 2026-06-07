@@ -4,6 +4,8 @@ import { BASE_SYSTEM_PROMPT } from "@/lib/ai/prompts"
 import { getRecommendedModel } from "@/lib/ai/ollama-client"
 import { getCurrentNoteContext, retrieveRelevantNotes, buildRAGContext } from "@/lib/ai/rag"
 import { auth } from "@/lib/auth"
+import { aiModel } from "@/lib/ai/client"
+import { checkRateLimit, recordApiUsage } from "@/lib/ai/rate-limit"
 
 /**
  * 聊天 API 路由
@@ -69,10 +71,27 @@ export async function POST(req: Request) {
       }
     }
 
-    // 优先使用 OpenAI
-    if (process.env.OPENAI_API_KEY) {
+    // 检查限流（仅对 DeepSeek/OpenAI 进行限流，Ollama 不限流）
+    if (aiModel) {
+      // 获取最后一条用户消息用于限流检查
+      const lastUserMessage = messages
+        .filter((m: { role: string }) => m.role === "user")
+        .pop()
+      const inputText = lastUserMessage?.content || messages.map((m: { content: string }) => m.content).join("\n")
+      
+      const rateLimitResponse = await checkRateLimit(inputText)
+      if (rateLimitResponse) {
+        return rateLimitResponse
+      }
+      
+      // 记录使用情况（异步，不阻塞响应）
+      recordApiUsage(inputText)
+    }
+
+    // 优先使用 DeepSeek 或 OpenAI（如果配置了）
+    if (aiModel) {
       const result = await streamText({
-        model: openai("gpt-3.5-turbo"),
+        model: aiModel,
         system: systemPrompt,
         messages: messages.map((msg: { role: string; content: string }) => ({
           role: msg.role as "user" | "assistant" | "system",
@@ -84,7 +103,7 @@ export async function POST(req: Request) {
       return result.toTextStreamResponse()
     }
 
-    // 使用 Ollama 本地模型
+    // 使用 Ollama 本地模型（如果没有配置 DeepSeek 或 OpenAI）
     try {
       // 先检查 Ollama 服务是否可用（使用动态导入避免启动时连接）
       const ollamaBaseUrl = process.env.OLLAMA_BASE_URL || "http://localhost:11434"

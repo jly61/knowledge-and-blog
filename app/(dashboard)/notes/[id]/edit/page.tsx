@@ -41,10 +41,11 @@ export default async function EditNotePage({
     }),
   ])
 
-  const noteTitleMap = new Map<string, string>()
+  // 将 Map 转换为普通对象，以便序列化传递到 Client Component
+  const noteTitleMap: Record<string, string> = {}
   allNotes.forEach((n) => {
-    noteTitleMap.set(n.title.toLowerCase(), n.id)
-    noteTitleMap.set(n.title, n.id)
+    noteTitleMap[n.title.toLowerCase()] = n.id
+    noteTitleMap[n.title] = n.id
   })
 
   return (

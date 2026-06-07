@@ -34,11 +34,11 @@ export default async function EditPostPage({
     }),
   ])
 
-  // 创建笔记标题映射，用于双向链接
-  const noteTitleMap = new Map<string, string>()
+  // 创建笔记标题映射，用于双向链接（使用普通对象以便序列化）
+  const noteTitleMap: Record<string, string> = {}
   allNotes.forEach((n) => {
-    noteTitleMap.set(n.title.toLowerCase(), n.id)
-    noteTitleMap.set(n.title, n.id)
+    noteTitleMap[n.title.toLowerCase()] = n.id
+    noteTitleMap[n.title] = n.id
   })
 
   return (

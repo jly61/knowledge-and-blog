@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>用户管理页面预览</title>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+  <script src="https://unpkg.com/dayjs@1/dayjs.min.js"></script>
+  <script src="https://unpkg.com/antd@5/dist/antd.min.js"></script>
+  <script src="https://unpkg.com/@ant-design/icons/dist/index.umd.js"></script>
+  <style>
+    body { margin: 0; padding: 0; background-color: #f0f2f5; }
+  </style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel">
+  const { Layout, Menu, Table, Button, Input, Space, Tag, ConfigProvider } = antd;
+  const { Header, Content, Sider } = Layout;
+  const { Search } = Input;
+  const { PlusOutlined, UserOutlined, SettingOutlined } = icons;
+
+  const App = () => {
+    // 模拟用户数据
+    const dataSource = [
+      { key: '1', name: '张三', email: 'zhangsan@example.com', role: '超级管理员', status: 'active' },
+      { key: '2', name: '李四', email: 'lisi@example.com', role: '普通用户', status: 'active' },
+      { key: '3', name: '王五', email: 'wangwu@example.com', role: '运营专员', status: 'disabled' },
+    ];
+
+    // 表格列配置
+    const columns = [
+      { title: '姓名', dataIndex: 'name', key: 'name' },
+      { title: '邮箱', dataIndex: 'email', key: 'email' },
+      {
+        title: '角色',
+        dataIndex: 'role',
+        key: 'role',
+        render: (text) => <Tag color={text === '超级管理员' ? 'geekblue' : 'default'}>{text}</Tag>,
+      },
+      {
+        title: '状态',
+        dataIndex: 'status',
+        key: 'status',
+        render: (status) => (
+            <Tag color={status === 'active' ? 'success' : 'error'}>
+              {status === 'active' ? '正常' : '已停用'}
+            </Tag>
+        ),
+      },
+      {
+        title: '操作',
+        key: 'action',
+        render: (_, record) => (
+            <Space size="middle">
+              <a href="#">编辑</a>
+              <a href="#" style={{ color: '#ff4d4f' }}>删除</a>
+            </Space>
+        ),
+      },
+    ];
+
+    return (
+        /* 在这里通过 ConfigProvider 注入 #1890ff 主题色 */
+        <ConfigProvider
+            theme={{
+              token: {
+                colorPrimary: '#1890ff',
+                borderRadius: 6,
+              },
+            }}
+        >
+          <Layout style={{ minHeight: '100vh' }}>
+            <Sider theme="light">
+              <div style={{
+                height: 32,
+                margin: 16,
+                background: 'rgba(24, 144, 255, 0.1)',
+                color: '#1890ff',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: 6,
+                fontWeight: 'bold'
+              }}>
+                后台管理系统
+              </div>
+              <Menu
+                  theme="light"
+                  mode="inline"
+                  defaultSelectedKeys={['1']}
+                  items={[
+                    { key: '1', icon: <UserOutlined />, label: '用户管理' },
+                    { key: '2', icon: <SettingOutlined />, label: '系统设置' }
+                  ]}
+              />
+            </Sider>
+            <Layout>
+              <Header style={{ padding: 0, background: '#fff' }} />
+              <Content style={{ margin: '24px 16px', padding: 24, minHeight: 280, background: '#fff', borderRadius: 8 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 20 }}>
+                  <Space>
+                    <Search placeholder="搜索用户名或邮箱" allowClear style={{ width: 250 }} />
+                  </Space>
+                  <Button type="primary" icon={<PlusOutlined />}>添加用户</Button>
+                </div>
+                <Table
+                    dataSource={dataSource}
+                    columns={columns}
+                    pagination={{ defaultCurrent: 1, total: 50, showSizeChanger: true }}
+                />
+              </Content>
+            </Layout>
+          </Layout>
+        </ConfigProvider>
+    );
+  };
+
+  const root = ReactDOM.createRoot(document.getElementById('root'));
+  root.render(<App />);
+</script>
+</body>
+</html>

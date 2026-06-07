@@ -183,7 +183,7 @@ export function NoteEditor({ note, categories, tags, noteTitleMap = new Map() }:
 
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <Label>标签</Label>
+          <Label>标签</Label>
             <Button
               type="button"
               variant="outline"

@@ -79,8 +79,8 @@ export async function recommendTags(
       .replace("{{CATEGORIES_LIST}}", categoriesList || "暂无分类")
       .replace("{{EXISTING_TAGS}}", existingTagIds.join(", ") || "无")
 
-    // 优先使用 OpenAI
-    if (process.env.OPENAI_API_KEY && aiModel) {
+    // 优先使用 DeepSeek 或 OpenAI（如果配置了）
+    if (aiModel) {
       const result = await generateText({
         model: aiModel,
         prompt,
