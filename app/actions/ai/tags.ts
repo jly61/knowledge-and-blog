@@ -150,7 +150,7 @@ function parseTagRecommendation(
     allCategories.map((cat) => [cat.name.toLowerCase(), cat.id])
   )
 
-  let tagIds: string[] = []
+  const tagIds: string[] = []
   let categoryId: string | undefined
   const reasons: { tagId: string; reason: string }[] = []
 
@@ -159,7 +159,7 @@ function parseTagRecommendation(
     const jsonMatch = text.match(/\{[\s\S]*\}/)
     if (jsonMatch) {
       const parsed = JSON.parse(jsonMatch[0])
-      
+
       // 解析标签
       if (parsed.tags && Array.isArray(parsed.tags)) {
         for (const tagName of parsed.tags) {
